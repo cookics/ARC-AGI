@@ -1,0 +1,110 @@
+====================================================
+ARC-AGI-1: STATISTICAL AUDIT & HETEROGENEITY REPORT
+====================================================
+
+--- AUDIT: Addressing the P=1.000 Anomaly ---
+Previously, P-values clustered at 1.0 because the Rasch null model assumes STOCHASTIC behavior.
+LLMs are largely DETERMINISTIC. They solve items they know and fail items they don't, with very little 'luck' noise.
+This results in 'Infranormal' variance (MSQ < 1).
+
+New Method: Permutation Test (Swap Algorithm).
+We shuffled the response matrix 200 times while keeping exact model and task scores constant.
+This tests if the models' successes are 'locally grouped' or 'scattered' compared to random permutations.
+
+--- GLOBAL SCALE METRICS (Permutation Based) ---
+Observed Loevinger's H: 0.794
+Empirical P-value for Scale Cohesion: 0.0050
+Interpretation: If P < .05, the benchmark is significantly more structured than random.
+
+--- MODEL-SPECIFIC DIAGNOSTICS ---
+P_Misfit < .05: Significant Heterogeneity (Unusually messy performance).
+P_Consistency < .05: Unusually Guttman-like performance (No deviations at all).
+
+                                                                          Model
+.git                                                                       .git
+claude-haiku-4-5-20251001                             claude-haiku-4-5-20251001
+claude-haiku-4-5-20251001-thinking-16k   claude-haiku-4-5-20251001-thinking-16k
+claude-haiku-4-5-20251001-thinking-1k     claude-haiku-4-5-20251001-thinking-1k
+claude-haiku-4-5-20251001-thinking-32k   claude-haiku-4-5-20251001-thinking-32k
+claude-haiku-4-5-20251001-thinking-8k     claude-haiku-4-5-20251001-thinking-8k
+claude-sonnet-4-5-20250929                           claude-sonnet-4-5-20250929
+claude-sonnet-4-5-20250929-thinking-16k claude-sonnet-4-5-20250929-thinking-16k
+claude-sonnet-4-5-20250929-thinking-1k   claude-sonnet-4-5-20250929-thinking-1k
+claude-sonnet-4-5-20250929-thinking-32k claude-sonnet-4-5-20250929-thinking-32k
+claude-sonnet-4-5-20250929-thinking-8k   claude-sonnet-4-5-20250929-thinking-8k
+gemini-3-deep-think-preview                         gemini-3-deep-think-preview
+gemini-3-pro-preview                                       gemini-3-pro-preview
+gpt-4-1-2025-04-14                                           gpt-4-1-2025-04-14
+gpt-4-1-mini-2025-04-14                                 gpt-4-1-mini-2025-04-14
+gpt-4-1-nano-2025-04-14                                 gpt-4-1-nano-2025-04-14
+gpt-4-5-2025-02-27                                           gpt-4-5-2025-02-27
+gpt-5-1-2025-11-13-thinking-high               gpt-5-1-2025-11-13-thinking-high
+gpt-5-1-2025-11-13-thinking-low                 gpt-5-1-2025-11-13-thinking-low
+gpt-5-1-2025-11-13-thinking-medium           gpt-5-1-2025-11-13-thinking-medium
+gpt-5-1-2025-11-13-thinking-none               gpt-5-1-2025-11-13-thinking-none
+gpt-5-pro-2025-10-06                                       gpt-5-pro-2025-10-06
+grok-4-fast-reasoning                                     grok-4-fast-reasoning
+qwen3-235b-a22b-instruct-2507                     qwen3-235b-a22b-instruct-2507
+QwQ-32B-Fireworks                                             QwQ-32B-Fireworks
+                                              Score Outfit_Obs P_Misfit
+.git                                    0.000000000 0.09253115        1
+claude-haiku-4-5-20251001               0.237967914 0.56288377        1
+claude-haiku-4-5-20251001-thinking-16k  0.446524064 0.69297581        1
+claude-haiku-4-5-20251001-thinking-1k   0.235294118 0.56340985        1
+claude-haiku-4-5-20251001-thinking-32k  0.596256684 0.69829395        1
+claude-haiku-4-5-20251001-thinking-8k   0.366310160 0.63976020        1
+claude-sonnet-4-5-20250929              0.307486631 0.63201408        1
+claude-sonnet-4-5-20250929-thinking-16k 0.598930481 0.71166645        1
+claude-sonnet-4-5-20250929-thinking-1k  0.320855615 0.60268373        1
+claude-sonnet-4-5-20250929-thinking-32k 0.695187166 0.67716716        1
+claude-sonnet-4-5-20250929-thinking-8k  0.494652406 0.70607693        1
+gemini-3-deep-think-preview             0.959893048 0.35748740        1
+gemini-3-pro-preview                    0.855614973 0.54670473        1
+gpt-4-1-2025-04-14                      0.104278075 0.36723648        1
+gpt-4-1-mini-2025-04-14                 0.056149733 0.28837983        1
+gpt-4-1-nano-2025-04-14                 0.005347594 0.09903369        1
+gpt-4-5-2025-02-27                      0.141711230 0.44595424        1
+gpt-5-1-2025-11-13-thinking-high        0.724598930 0.70671265        1
+gpt-5-1-2025-11-13-thinking-low         0.377005348 0.70711870        1
+gpt-5-1-2025-11-13-thinking-medium      0.655080214 0.69223851        1
+gpt-5-1-2025-11-13-thinking-none        0.101604278 0.35770451        1
+gpt-5-pro-2025-10-06                    0.772727273 0.64957422        1
+grok-4-fast-reasoning                   0.502673797 0.78616699        1
+qwen3-235b-a22b-instruct-2507           0.165775401 0.53536805        1
+QwQ-32B-Fireworks                       0.072192513 0.31893214        1
+                                        P_Consistency
+.git                                      1.000000000
+claude-haiku-4-5-20251001                 0.004975124
+claude-haiku-4-5-20251001-thinking-16k    0.004975124
+claude-haiku-4-5-20251001-thinking-1k     0.004975124
+claude-haiku-4-5-20251001-thinking-32k    0.004975124
+claude-haiku-4-5-20251001-thinking-8k     0.004975124
+claude-sonnet-4-5-20250929                0.004975124
+claude-sonnet-4-5-20250929-thinking-16k   0.004975124
+claude-sonnet-4-5-20250929-thinking-1k    0.004975124
+claude-sonnet-4-5-20250929-thinking-32k   0.004975124
+claude-sonnet-4-5-20250929-thinking-8k    0.004975124
+gemini-3-deep-think-preview               0.004975124
+gemini-3-pro-preview                      0.004975124
+gpt-4-1-2025-04-14                        0.004975124
+gpt-4-1-mini-2025-04-14                   0.004975124
+gpt-4-1-nano-2025-04-14                   0.004975124
+gpt-4-5-2025-02-27                        0.004975124
+gpt-5-1-2025-11-13-thinking-high          0.004975124
+gpt-5-1-2025-11-13-thinking-low           0.004975124
+gpt-5-1-2025-11-13-thinking-medium        0.004975124
+gpt-5-1-2025-11-13-thinking-none          0.004975124
+gpt-5-pro-2025-10-06                      0.004975124
+grok-4-fast-reasoning                     0.004975124
+qwen3-235b-a22b-instruct-2507             0.004975124
+QwQ-32B-Fireworks                         0.004975124
+
+--- TARGET CASE ANALYSIS ---
+qwen3-235b-a22b-instruct-2507:
+  Outfit MSQ: 0.535
+  P-Value (Heterogeneity Signal): 1.0000
+  VERDICT: NO SIGNAL. Performance matches the general ability scale.
+gpt-5-pro-2025-10-06:
+  Outfit MSQ: 0.650
+  P-Value (Heterogeneity Signal): 1.0000
+  VERDICT: NO SIGNAL. Performance matches the general ability scale.

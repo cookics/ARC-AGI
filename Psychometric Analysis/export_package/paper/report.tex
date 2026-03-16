@@ -1,0 +1,156 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{caption}
+
+\captionsetup{font=small}
+\setstretch{1.08}
+
+\title{Do Language Models Act Uniformly Across Benchmarks?:\\An Internal Results Note}
+\author{Internal project synthesis}
+\date{March 15, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note answers one question: do language models act uniformly across benchmarks, or do they show benchmark-specific abilities? The cleanest answer from this project is: mostly uniformly, but not perfectly. The benchmark correlation matrices show a strong positive manifold. The first component explains about two thirds of variance in the newest standard benchmark matrix, and most benchmark pairs are strongly positively correlated. A stronger direct test gives the same answer: when each benchmark is held out in turn, a single common score built from the other benchmarks predicts the held-out benchmark with mean $R^2 = 0.615$ and median $R^2 = 0.659$. However, the factor models are not clean enough to be treated as a final psychometric measurement story. In sparse matrices they fit terribly; in the denser 203-model matrix they fit much better, but the best solutions are sensitive to preprocessing and sometimes hit Heywood or identification problems. My scientific judgment is therefore that the correlation structure strongly supports a general capacity, while the factor models are best treated as descriptive summaries of that structure rather than decisive proof of a stable latent architecture.
+\end{abstract}
+
+\section{Question and Materials}
+The project question is straightforward: do language models carry a broad capability that transfers across benchmarks, or are they mostly a bundle of specific skills? The factor analyses were only useful insofar as they helped answer that question.
+
+This note therefore puts the evidence in the following order: correlations first, factor models second, and data-quality caveats third. It uses three internal sources:
+\begin{enumerate}
+\item the newest 203-model, 13-benchmark matrix in \texttt{AI Bench more/filtered\_evals\_floats.json};
+\item the denser 203-model benchmark synthesis in \texttt{AI bench API}, especially the saved model-fit and robustness outputs;
+\item the earlier clean but sparse matrices in \texttt{AI bench g}, which are important because they show where the factor models fail.
+\end{enumerate}
+
+\section{Correlations First}
+The most important evidence is the correlation structure itself. In the newest standard benchmark panel, the correlation matrix is broadly positive and blocky rather than fragmented. The strongest benchmark pairs are GPQA--SciCode at 0.919, GPQA--LiveCodeBench at 0.908, AIME--LiveCodeBench at 0.908, GDPval-AA--Terminal-Bench Hard at 0.870, and AIME--GPQA at 0.860. This is not what a highly modular benchmark world would look like.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/benchmark_correlation_heatmap.png}
+\caption{Latest benchmark correlation matrix. The main visual fact is a broad positive manifold rather than isolated benchmark islands.}
+\end{figure}
+
+The weakest correlations are also informative. Nearly all of them involve \texttt{AA-Omniscience Non-Hallucination Rate}: 0.086 with CritPt, 0.097 with AIME, 0.130 with LiveCodeBench, 0.139 with Omniscience Accuracy, and 0.147 with Humanity's Last Exam. So the newest matrix says two things at once: there is a broad general capability signal, and hallucination resistance is the clearest exception to it.
+
+This same point appears in the one-factor loadings. In the newest benchmark matrix, the first component explains 0.664 of the variance, and a one-factor exploratory model explains 0.641. GPQA loads 0.916, SciCode 0.893, LiveCodeBench 0.874, Terminal-Bench Hard 0.872, and AA-LCR 0.862. CritPt still loads 0.600. The weak outlier is again non-hallucination, at 0.234.
+
+\begin{table}[H]
+\centering
+\caption{Correlation-level evidence for a general benchmark factor}
+\begin{tabular}{p{2.6in}p{3.1in}}
+\toprule
+Quantity & Result \\
+\midrule
+First component variance, newest benchmark matrix & 0.664 \\
+One-factor EFA variance explained & 0.641 \\
+Strongest benchmark pair & GPQA--SciCode, $r = 0.919$ \\
+Other strong pairs & GPQA--LiveCodeBench 0.908; AIME--LiveCodeBench 0.908; GDPval-AA--Terminal-Bench Hard 0.870 \\
+Weakest benchmark pair & Non-hallucination--CritPt, $r = 0.086$ \\
+Weakest one-factor loading & Non-hallucination, 0.234 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+If I answer the main question using only the correlation evidence, the answer is yes: language models mostly act uniformly across these benchmarks, with a few clear edge variables.
+
+\subsection{A stronger direct test: hold one benchmark out}
+There is one test in this project that is even closer to the core question than factor modeling. For each benchmark, I built a single common score from the other twelve benchmarks using the first principal component, then asked how well that common score predicts the held-out benchmark.
+
+This works very well for most benchmarks. The mean held-out $R^2$ is 0.615 and the median is 0.659. GPQA is predicted at $R^2 = 0.802$, SciCode at 0.764, Terminal-Bench Hard at 0.731, LiveCodeBench at 0.731, and AA-LCR at 0.714. Even IFBench, AIME, HLE, and GDPval-AA all land around 0.636--0.659. The clear weak exceptions are CritPt at 0.347 and non-hallucination at 0.053.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{figures/holdout_g_prediction.png}
+\caption{Held-out benchmark prediction from common benchmark ability. Most benchmarks are well predicted by a single common score derived from the others; the clearest exceptions are CritPt and non-hallucination.}
+\end{figure}
+
+I think this is one of the strongest results in the whole project. If a benchmark can usually be reconstructed fairly well from the shared signal in the other benchmarks, that is direct evidence for unitary benchmark-level ability.
+
+\section{What the Factor Models Say}
+The factor models do not tell one single story. They tell a layered story.
+
+\subsection{On sparse matrices, the factor models do not work cleanly}
+The early clean analyses in \texttt{AI bench g} are the strongest evidence against overclaiming. They still show a positive manifold: in the re-do analysis, a one-factor PCA explains 0.691 of the variance, and parallel analysis suggested one factor. But the confirmatory fit statistics are terrible. In the clean matrix, the unidimensional model has CFI 0.041 and RMSEA 1.025; the best three- and four-factor models only rise to CFI 0.056--0.057, with RMSEA still around 1.03. In the supplementary \texttt{MORE\_DATA} matrix, unidimensional CFI is 0.143 and the three-factor model only reaches 0.149, again with RMSEA around 1.01.
+
+That means the early answer is not ``no generality.'' It is ``the positive manifold is real, but the full SEM/CFA factor models are not fitting well enough to claim we have the latent structure solved.''
+
+\subsection{On the denser 203-model matrix, factor models become useful but still messy}
+The later 203-model analysis in \texttt{AI bench API} is the best case for factor modeling. Here the single-factor model is clearly inadequate: CFI 0.761, RMSEA 0.236, SRMR 0.076, BIC 5275.6. Multi-factor models improve a lot. The best valid saved models are bifactor and orthogonal 3F/4F solutions: for example, \texttt{equamax\_Bifactor\_3F} reaches CFI 0.983 and RMSEA 0.083; \texttt{varimax\_Bifactor\_4F} reaches CFI 0.983 and RMSEA 0.087. The numerically best solution, \texttt{equamax\_Bifactor\_4F}, reaches CFI 0.996 and RMSEA 0.042, but it is flagged invalid because of Heywood or non-positive-definite problems.
+
+So the later result is stronger than the early one, but it is still not ``factor model victory.'' The right reading is:
+\begin{enumerate}
+\item a pure single-g model is too simple;
+\item a multi-factor or bifactor decomposition is descriptively much better;
+\item the exact preferred decomposition is not fully stable or clean.
+\end{enumerate}
+
+The newest benchmark-only sweep in \texttt{AI Bench more} lands in the same place. The one-factor solution is already strong, but the best BIC in the sweep is the four-factor solution ($-70.6$), with the five-factor solution adding only a marginal gain in variance explained. Again: mostly general, but not purely general.
+
+\begin{table}[H]
+\centering
+\caption{Factor-model evidence across project stages}
+\begin{tabular}{p{1.7in}p{1.8in}p{2.9in}}
+\toprule
+Dataset & Best signal & Interpretation \\
+\midrule
+Early clean matrix (\texttt{AI bench g}) & PCA 1F = 0.691 variance; CFA fits all bad & positive manifold exists, but factor model does not work as a clean confirmatory story \\
+Supplementary \texttt{MORE\_DATA} matrix & 3F better than 1F by AIC/BIC, but CFI only 0.149 & same qualitative structure, still poor absolute fit \\
+Dense N203 benchmark matrix (\texttt{AI bench API}) & single g poor; valid 3F/4F bifactor models much better & factor models become descriptively useful, but best solutions are fragile \\
+Newest benchmark-only matrix (\texttt{AI Bench more}) & 1F already strong; 4F best BIC & general factor plus residual domain structure \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Other Perspectives That Matter}
+\subsection{Transformations do not kill the general factor}
+One of the strongest robustness results in the saved outputs is that the general variance share does not disappear under ordinary transformations. In \texttt{VARIANCE\_REDUCTION\_RESULTS.csv}, the estimated g share is 68.1\% in the baseline z-scored data, 68.6\% after log normalization, 75.2\% after rank-percentile transformation, and 68.1\% after min-max scaling. The only transformation that breaks the model is row-wise standardization, which fails to converge at all. That is actually consistent with the rest of the project: row standardization deliberately removes each model's overall level, so it is the one transformation designed to strip out generality.
+
+\subsection{Residual profiles are idiosyncratic even when raw scores are highly correlated}
+The inter-model correlation results are one of the most useful alternative perspectives. In the N203 matrix, the mean raw pairwise model correlation is 0.7606 and the median is 0.7973. After z-scoring by benchmark, the mean pairwise model correlation drops to $-0.0043$ and the median to $-0.0315$. The saved Jensen/Weng residual result says the same thing another way: average raw correlation is 0.632, average residual correlation is $-0.033$, a 105\% reduction.
+
+This matters because it clarifies the science. The models share a strong common level across benchmarks, but once that common level is removed, their remaining benchmark-specific profiles are much less coherent. That is evidence for a real general capacity plus noisy or model-specific edges, not evidence against generality.
+
+\subsection{The manifold is low-dimensional, but not one-dimensional}
+The manifold analyses are also worth keeping. In the saved dimensionality output, the first principal component explains 66.4\% of the variance, five dimensions are needed for 90\% of the variance, and eight for 95\%. So the benchmark space is not one-dimensional in a strict sense, but it is also not high-dimensional in the way we would expect if the benchmarks were mostly independent skills.
+
+The saved Guttman / Mokken result points in the same direction. Loevinger's scalability coefficient is $H = 0.519$, which is reasonably strong evidence for an ordered accumulation structure. It is not a perfect cumulative hierarchy, but it is much closer to ``shared ordered ability'' than to ``independent scatter.''
+
+\subsection{The exact subfactors are not especially stable}
+The saved \texttt{FACTOR\_CONGRUENCE\_N140.csv} output is bad news for a strong latent-architecture claim. The rotated factor congruence values across the N140 and N203 runs are low in magnitude and often negative. I would not use these analyses to claim that the exact subfactors are stable in a strong psychometric sense. At best, the project found recurring clusters around coding or technical, reasoning, knowledge, and agentic behavior. It did not pin down a single stable, rotation-invariant subfactor map.
+
+\subsection{The effective sample size problem is real}
+The project's own power and matrix-sufficiency notes matter. The correlation matrix is enough for structural analysis, but not for scoring. More importantly, the effective N is often much smaller than the raw number of models suggests. In the saved power analysis, at N = 45 a correlation of 0.5 has an expected 95\% CI width of about 0.45, and loading SEs are around 0.15. That is wide. In the model-independence analysis, 75\% of models initially sat near the floor, inflating correlations. Even after filtering viable models, 29.7\% of model pairs still exceeded $r = 0.90$. The saved recommendation was effectively that the defensible N is more like 50--60 after weighting and filtering, not the raw headline count.
+
+That does not erase the positive manifold. It does mean the factor models should be interpreted cautiously, especially when the exact factor labels start looking too clean.
+
+\section{My Judgment}
+My own scientific judgment is:
+
+\begin{enumerate}
+\item If the question is ``Do language models show a broad capability that generalizes across benchmarks?'', then yes, mostly. The correlation matrices, first-component results, and loading patterns all point that way.
+\item The holdout-benchmark test strengthens that answer. A single common score built from the remaining benchmarks predicts most held-out benchmarks pretty well.
+\item If the question is ``Do the factor models work well enough to tell us the final latent architecture?'', then no, not really. They work as exploratory summaries, not as a fully convincing measurement model.
+\item The cleanest description of the project's results is therefore: language models have a strong general benchmark capacity, plus some benchmark-specific edges, but the edge structure is not estimated cleanly enough to treat as settled science.
+\end{enumerate}
+
+So I would put the main conclusion this way: the project succeeded at answering the headline question, but it did so more convincingly with correlations, variance concentration, and robustness checks than with a single triumphant factor model. The factor models add perspective; they do not carry the whole argument by themselves.
+
+\section{Bottom Line}
+Across the standard benchmark suites, the evidence is much closer to ``mostly general'' than to ``mostly modular.'' The main thing arguing against a naive general-factor story is not the correlations. It is the instability and imperfect fit of the factor models once the data become sparse, duplicated, or preprocessing-sensitive. That is why the strongest internal statement is:
+
+\begin{quote}
+Language models mostly act uniformly across standard benchmarks, but the current factor models do not yet justify a strong claim that we have recovered the true latent structure of their abilities.
+\end{quote}
+
+\end{document}
