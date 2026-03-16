@@ -13,6 +13,13 @@ This repository contains scripts for analyzing the dimensionality, difficulty, a
 
 ## Documentation
 
+**Building the Paper:**
+To compile the LaTeX paper natively, open a new PowerShell terminal and run the following command directly from the `Psychometric Analysis` directory:
+```powershell
+latexmk -pdf paper.tex
+```
+*(Note: Do not use any temporary build folders or scripts; the system `PATH` is already configured for TinyTeX.)*
+
 For a detailed walkthrough of the repository setup and the initial push process, see [walkthroughs/github_push_walkthrough.md](walkthroughs/github_push_walkthrough.md).
 
 ## Author
