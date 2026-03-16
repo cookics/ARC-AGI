@@ -200,9 +200,13 @@ p_factor <- ggplot(scores, aes(x = Factor1, y = Factor2)) +
 ggsave("arc_v1_heterogeneity.png", p_factor, width = 14, height = 10, dpi = 300)
 
 # --- 6. REPORTING ---
+sink("arc_v1_analysis_results.txt")
 cat("\n[REPORT] Analysis Complete.\n")
 print(fa_model)
 cat("\n-- Factor Correlations --\n")
 print(fa_model$Phi)
 cat("\n-- Top Heterogeneous Models (High F1/F2 Split) --\n")
 print(anomalies[, c("Model", "Factor1", "Factor2", "Discrepancy")])
+sink()
+
+cat("\n[DONE] Results saved to arc_v1_analysis_results.txt\n")
