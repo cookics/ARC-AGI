@@ -47,7 +47,7 @@ What Do AI Benchmarks Actually Measure?}}
 
 % =============================================================================
 \begin{abstract}
-AI benchmarks are routinely used to rank large language models, yet rarely subjected to the same psychometric scrutiny applied to human intelligence tests. We apply classical test theory, Item Response Theory (IRT), and principal component analysis to 25 frontier LLMs evaluated on the ARC-AGI benchmark (400 tasks, v1; 120 tasks, v2). Our analysis reveals three principal findings. First, ARC-AGI is \textit{essentially unidimensional}: PC1 accounts for 48.7\% of variance, and the response matrix exhibits near-perfect Guttman scalability ($H = 0.779$). Second, LLMs are \textit{deterministic test-takers}---traditional Rasch diagnostics collapse because models lack within-subject variance, requiring a custom permutation-based inference framework. Third, ``Thinking'' (extended inference) and ``Standard'' model types occupy the \textit{same latent dimension}---Thinking models score higher but do not unlock qualitatively different reasoning. These findings suggest that current frontier LLMs differ in degree, not kind, on abstract reasoning tasks.
+AI benchmarks are routinely used to rank large language models, yet rarely subjected to the same psychometric scrutiny applied to human intelligence tests. We apply classical test theory, Item Response Theory (IRT), and principal component analysis to 24 frontier LLMs evaluated on the ARC-AGI benchmark (400 tasks, v1; 120 tasks, v2), then place the ARC results inside a broader benchmark-level extension. Our analysis reveals four principal findings. First, ARC-AGI is \textit{essentially unidimensional}: PC1 accounts for 48.7\% of variance, and the response matrix exhibits near-perfect Guttman scalability ($H = 0.779$). Second, LLMs are \textit{deterministic test-takers}---traditional Rasch diagnostics collapse because models lack within-subject variance, requiring a custom permutation-based inference framework. Third, ``Thinking'' (extended inference) and ``Standard'' model types occupy the \textit{same latent dimension}---Thinking models score higher but do not unlock qualitatively different reasoning. Fourth, this pattern is not unique to ARC: in a separate 203-model, 13-benchmark extension, a common factor explains 66.4\% of variance and predicts held-out benchmarks with mean $R^2 = 0.615$, although richer factor models remain necessary to describe residual domain structure. Taken together, the evidence suggests that current frontier LLMs differ primarily in degree of a shared capability, with ARC functioning as an unusually clean measure of abstract rule induction within a broader but noisier benchmark manifold.
 \end{abstract}
 
 % =============================================================================
@@ -58,13 +58,14 @@ The Abstraction and Reasoning Corpus (ARC-AGI) was introduced by Chollet (2019) 
 
 Despite its widespread use as a leaderboard metric, ARC-AGI has received surprisingly little \textit{psychometric} analysis. When human intelligence tests are deployed, a battery of statistical tools (factor analysis, IRT, measurement invariance testing) are used to determine whether the test measures what it claims to measure, whether it measures one thing or many, and whether scores are comparable across populations. These questions are equally important---and equally unanswered---for AI benchmarks.
 
-In this analysis, we subject ARC-AGI to the same scrutiny. We test 25 frontier LLMs from five vendors and ask:
+In this analysis, we subject ARC-AGI to the same scrutiny. We test 24 frontier LLMs from five vendors and ask:
 
 \begin{enumerate}
     \item \textbf{Dimensionality:} Does ARC-AGI measure one latent factor or multiple independent skills?
     \item \textbf{Scale structure:} Do tasks form a cumulative difficulty scale (Guttman pattern)?
     \item \textbf{Model taxonomy:} Do ``Thinking'' and ``Standard'' models differ in \textit{kind} or only in \textit{degree}?
     \item \textbf{Methodological validity:} Can classical psychometric tools be applied to deterministic AI systems?
+    \item \textbf{Benchmark generality:} Does the ARC story look benchmark-specific, or like a clean local slice of a broader LLM capability manifold?
 \end{enumerate}
 
 % =============================================================================
@@ -73,9 +74,9 @@ In this analysis, we subject ARC-AGI to the same scrutiny. We test 25 frontier L
 
 \subsection{Dataset}
 
-We evaluate 25 LLMs on both ARC-AGI-1 (public evaluation set, 400 tasks) and ARC-AGI-2 (public evaluation set, 120 tasks). After removing tasks with zero variance (solved by all or no models), we retain 372 tasks with informative variance for ARC-AGI-1.
+We evaluate 24 LLMs on both ARC-AGI-1 (public evaluation set, 400 tasks) and ARC-AGI-2 (public evaluation set, 120 tasks). After removing tasks with zero variance (solved by all or no models), we retain 372 tasks with informative variance for ARC-AGI-1.
 
-The 25 models span five vendors:
+The 24 models span five vendors:
 \begin{itemize}
     \item \textbf{OpenAI:} GPT-4.1, GPT-4.1-mini, GPT-4.1-nano, GPT-4.5, GPT-5.1 (thinking: none/low/medium/high), GPT-5-Pro
     \item \textbf{Anthropic:} Claude Haiku 4.5 (base + thinking: 1k/8k/16k/32k), Claude Sonnet 4.5 (base + thinking: 1k/8k/16k/32k)
@@ -88,7 +89,7 @@ Models are classified as ``Thinking'' (extended chain-of-thought inference) or `
 
 \subsection{Scoring}
 
-Each model receives two attempts per test pair within each task. A task is scored as correct (1) only if \textit{all} test pairs are solved. The binary response matrix $\mathbf{X} \in \{0,1\}^{25 \times 372}$ forms the basis of all subsequent analyses.
+Each model receives two attempts per test pair within each task. A task is scored as correct (1) only if \textit{all} test pairs are solved. The binary response matrix $\mathbf{X} \in \{0,1\}^{24 \times 372}$ forms the basis of all subsequent analyses.
 
 \subsection{Analytical Framework}
 
@@ -109,6 +110,8 @@ where $H > 0.5$ indicates a strong scale and $H > 0.4$ a moderate scale.
 \textbf{Permutation-Based Inference:} Because LLMs are deterministic (no within-subject variance), traditional residual-based statistics (Outfit MSQ, Zh) produce degenerate $p$-values. We implement a swap algorithm that generates null distributions by randomly permuting the response matrix while preserving row and column marginals (total model scores and task pass rates), then compare observed statistics against these null distributions.
 
 \textbf{Cluster Analysis:} Ward's method with Jaccard distance on the response matrix to identify ``families'' of similar-performing models.
+
+\textbf{Benchmark-Generalization Addendum:} To test whether the ARC result is benchmark-specific, we incorporate the new export package as a separate extension analysis. That package summarizes a 203-model, 13-benchmark matrix spanning coding, math, science, knowledge, long-context reasoning, instruction following, agentic tool use, and hallucination resistance. We treat it as a descriptive external comparison, focusing on correlation structure, one-factor loadings, held-out benchmark prediction, factor-model sweep results, and robustness to common score transformations.
 
 % =============================================================================
 \section{Results}
@@ -183,7 +186,7 @@ This visual pattern is confirmed quantitatively: Loevinger's $H = 0.779$, well a
 \subsection{Dimensionality: One Factor Rules All}
 \label{sec:dimensionality}
 
-Principal component analysis of the 25 $\times$ 372 response matrix reveals a dominant first component (Figure~\ref{fig:scree}):
+Principal component analysis of the 24 $\times$ 372 response matrix reveals a dominant first component (Figure~\ref{fig:scree}):
 
 \begin{itemize}
     \item \textbf{PC1:} 48.7\% of variance
@@ -296,6 +299,59 @@ The distribution of task difficulty (Figure~\ref{fig:difficulty}) shows that ARC
     \label{fig:difficulty}
 \end{figure}
 
+% --- 3.9 Benchmark Extension ---
+\subsection{Extension: ARC Within a Broader Benchmark Manifold}
+\label{sec:benchmark_extension}
+
+The new export package lets us test whether the ARC story is a special property of one benchmark or a local expression of a broader LLM capability structure. The extension analyzes a separate 203-model, 13-benchmark matrix spanning coding, competition math, science reasoning, knowledge, instruction following, long-context reasoning, agentic tool use, and hallucination resistance.
+
+The first-order result is again generality. In the benchmark panel, PC1 explains 66.4\% of variance and a one-factor exploratory model explains 64.1\%. Most benchmarks load strongly on the shared factor: GPQA (0.916), SciCode (0.893), LiveCodeBench (0.874), Terminal-Bench Hard (0.872), and AA-LCR (0.862) sit near the core of the manifold. The clear weak exception is non-hallucination, with a loading of just 0.234.
+
+A stronger out-of-sample test reaches the same conclusion. When each benchmark is held out and predicted from a single common score built from the other twelve benchmarks, mean held-out $R^2$ is 0.615 and median held-out $R^2$ is 0.659. GPQA reaches $R^2 = 0.802$, SciCode 0.764, Terminal-Bench Hard 0.731, LiveCodeBench 0.731, and AA-LCR 0.714. The weak exceptions are CritPt at 0.347 and non-hallucination at 0.053.
+
+As an additional synthesis across the exported tables, benchmark $g$-loadings and held-out predictability are almost perfectly aligned ($r = 0.990$). Benchmarks that sit more cleanly on the common factor are almost exactly the benchmarks that can be reconstructed from the rest of the suite. That is strong evidence that the common dimension is doing real explanatory work rather than merely absorbing diffuse correlations.
+
+The broader benchmark panel is not as psychometrically clean as ARC. Richer factor solutions improve variance explained from 64.1\% (1 factor) to 79.0\% (4 factors) and 82.0\% (5 factors), with the best BIC at 4 factors. Ordinary score transformations preserve the benchmark loading structure almost perfectly, but row-standardization collapses PC1 to 32.6\%. Likewise, mean pairwise model correlation drops from 0.761 in raw scores to $-0.004$ after benchmark-wise standardization. In other words, the benchmark manifold is genuinely general in first order, but much of that generality lives in a model-wide performance level, with benchmark-specific residual structure emerging once that level is removed.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.92\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{export_package/figures/benchmark_correlation_heatmap.png}
+        \caption{The 13-benchmark panel exhibits a broad positive manifold rather than isolated benchmark islands.}
+    \end{subfigure}
+
+    \vspace{0.75em}
+
+    \begin{subfigure}[t]{0.80\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{export_package/figures/holdout_g_prediction.png}
+        \caption{A single common score derived from the other benchmarks predicts most held-out benchmarks well.}
+    \end{subfigure}
+    \caption{Cross-benchmark extension from the export package. The broader benchmark world is less clean than ARC, but it still shows a strong common capability signal with a few benchmark-specific exceptions.}
+    \label{fig:benchmark_extension}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Benchmark-extension summary from the export package (203 models, 13 benchmarks).}
+\label{tab:benchmark_extension}
+\begin{tabular}{p{4.7in}r}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+PC1 variance explained & 66.4\% \\
+One-factor EFA variance explained & 64.1\% \\
+Mean held-out benchmark $R^2$ & 0.615 \\
+Median held-out benchmark $R^2$ & 0.659 \\
+Correlation between benchmark $g$-loading and held-out $R^2$ & 0.990 \\
+Best-aligned benchmark (GPQA) & loading 0.916; $R^2 = 0.802$ \\
+Weakest-aligned benchmark (non-hallucination) & loading 0.234; $R^2 = 0.053$ \\
+Row-standardized PC1 variance & 32.6\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 % =============================================================================
 \section{Discussion}
 \label{sec:discussion}
@@ -330,6 +386,12 @@ ARC-AGI-2 compresses the performance range dramatically (maximum 32.5\% vs.\ 96.
 
 The floor effect on V2---with most Standard models scoring 0.0\%---suggests that V2 may be \textit{too} difficult to provide meaningful discrimination among weaker models. The Test Information Function (not shown) confirms that V2's measurement precision is concentrated at very high ability levels.
 
+\subsection{ARC as a Clean Slice of Broader Generality}
+
+The export-package extension sharpens the interpretation of ARC itself. ARC is cleaner than the broader 13-benchmark panel: its response matrix approaches a staircase, its Loevinger scalability reaches 0.779, and its dominant factor is easier to interpret as a targeted abstract-reasoning measure. The wider benchmark world still shows strong generality, but with more residual domain structure and more obvious outliers.
+
+This suggests that ARC is not an arbitrary leaderboard artifact. It behaves more like a high-purity subtest inside a larger, noisier capability battery. Broader benchmark bundles appear to mix a strong shared model-wide performance factor with domain-specific overlays such as hallucination resistance, specialized physics reasoning, or agentic tool-use idiosyncrasies. ARC, by contrast, isolates visual rule induction unusually well. That makes it especially useful when the research question is about whether models differ in kind or degree on abstract reasoning, while the benchmark extension helps keep us honest about the fact that ``general capability'' outside ARC is real but not perfectly one-dimensional.
+
 % =============================================================================
 \section{Conclusion}
 \label{sec:conclusion}
@@ -340,16 +402,17 @@ We have applied classical and modern psychometric methods to ARC-AGI, the most w
     \item \textbf{ARC-AGI is unidimensional.} It measures a single dominant factor (PC1 = 48.7\%), and its items form a strong cumulative scale ($H = 0.779$).
     \item \textbf{LLMs break classical psychometrics.} Deterministic inference produces degenerate diagnostics. Permutation-based methods are required.
     \item \textbf{Thinking models are better, not different.} Extended inference increases ability on the same scale; it does not create new dimensions of reasoning.
-    \item \textbf{ARC-AGI is a valid ruler} for ranking frontier models on abstract reasoning, with V1 providing broad discrimination and V2 providing precision at the frontier.
+    \item \textbf{Broader benchmark suites are mostly general, but not purely general.} In the 13-benchmark extension, PC1 explains 66.4\% of variance and held-out benchmark prediction averages $R^2 = 0.615$, yet richer factor models still capture meaningful residual structure.
+    \item \textbf{ARC-AGI is a valid ruler} for abstract reasoning and appears to be an unusually clean slice of a broader LLM capability manifold, with V1 providing broad discrimination and V2 providing precision at the frontier.
 \end{enumerate}
 
-The central insight is sobering for AI progress claims: the 25 frontier models tested here, spanning five vendors and two years of development, differ in \textit{degree} of a single ability, not in \textit{kind}. Whether this reflects a genuine limitation of current architectures or a limitation of the benchmark itself is an open question for future work.
+The central insight is sobering for AI progress claims: the 24 frontier models tested here, spanning five vendors and two years of development, differ primarily in \textit{degree} of a shared capability, not in \textit{kind}. ARC makes that story especially legible because it is cleaner than the broader benchmark world, but the extension analysis suggests the same basic generality carries beyond ARC even when residual domain structure is allowed to matter. Whether this reflects a genuine limitation of current architectures or a limitation of our current benchmark ecology is an open question for future work.
 
 % =============================================================================
 \section*{Data Availability}
 \label{sec:data}
 
-All evaluation data, analysis scripts, and generated figures are available in the project repository. The response matrices, permutation test results, and model scoring can be reproduced using the \texttt{generate\_all.py} script included in the \texttt{scripts/} directory.
+All evaluation data, analysis scripts, and generated figures are available in the project repository. The response matrices, permutation test results, and model scoring can be reproduced using the \texttt{generate\_all.py} script included in the \texttt{scripts/} directory. The broader benchmark addendum used here is packaged in \texttt{export\_package/}, including the figures, tables, and lightweight reproduction materials for the cross-benchmark results.
 
 % =============================================================================
 \end{document}
