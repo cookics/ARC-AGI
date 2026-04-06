@@ -14,3 +14,6 @@ This folder is reserved for non-LLM source data that we want to keep separate fr
 - Put derived artifacts in `processed/` so downstream work can depend on a stable copy.
 - If you need temporary scratch space, add it under a folder that is ignored locally before generating large outputs.
 
+## Shared Loader
+
+Use [`analysis/compare_non_llm_datasets.py`](analysis/compare_non_llm_datasets.py) to scan every imported dataset under `raw/` and build a normalized inventory for comparison.
