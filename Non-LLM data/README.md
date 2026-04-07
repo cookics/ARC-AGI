@@ -17,3 +17,12 @@ This folder is reserved for non-LLM source data that we want to keep separate fr
 ## Shared Loader
 
 Use [`analysis/compare_non_llm_datasets.py`](analysis/compare_non_llm_datasets.py) to scan every imported dataset under `raw/` and build a normalized inventory for comparison.
+
+## Stored Evaluation Artifact
+
+The current trusted candidate artifact is CompressARC's ARC-AGI-1 evaluation run:
+
+- Raw NPZ: `raw/Compress ARC/results_for_the_blog_post/predictions_evaluation.npz`
+- Task order file: `raw/Compress ARC/dataset/arc-agi_evaluation_challenges.json`
+- Local scorer: `analysis/score_compressarc_predictions.py`
+- Saved summary: `processed/compress_arc_predictions_evaluation_summary.json`

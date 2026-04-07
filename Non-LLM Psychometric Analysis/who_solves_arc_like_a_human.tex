@@ -1,0 +1,305 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{parskip}
+\usepackage{array}
+
+\definecolor{darkslate}{HTML}{23364D}
+\definecolor{tealband}{HTML}{9FD0CB}
+\definecolor{accentorange}{HTML}{F58518}
+\definecolor{accentblue}{HTML}{4C78A8}
+\definecolor{accentgreen}{HTML}{54A24B}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=darkslate,
+    citecolor=darkslate,
+    urlcolor=darkslate,
+}
+
+\title{\textbf{Who Solves ARC Like a Human?}\\
+\large A Psychometric Comparison of LLM and Non-LLM Systems}
+\author{@notcomplex\_}
+\date{April 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note asks a narrow question: once we add a few bona fide non-LLM ARC systems to the repository, do they look more human-like than the LLMs, less human-like, or simply different in a complementary way? The answer is mixed but fairly clear. On the ARC-2 human-overlap subset, the LLM aggregate sits comfortably inside the human split-half band, while the currently stored non-LLM systems do not. At the same time, the non-LLM systems are not just noise. A mid-training TRM checkpoint and the VARC predictions show small but real human-relevant structure, and the TRM+VARC union rescues a handful of human-easy / LLM-hard items above chance. The most important methodological point is that the low raw correlations are not automatically disappointing: the human benchmark itself is noisy, and low-score binary systems have a very wide same-accuracy random-placement null. The right comparison is therefore not raw correlation alone, but correlation relative to both human measurement noise and fixed-accuracy random baselines.
+\end{abstract}
+
+\section{Question}
+
+The practical question here is not ``are these systems literally the same as humans?'' That is too vague to test. What we can test is whether their \emph{item-difficulty profiles} line up with human solve rates in the same way.
+
+The working nulls in this note are:
+
+\begin{enumerate}
+    \item \textbf{Human-equivalence null:} the system's item profile is exchangeable with a random human split-half profile.
+    \item \textbf{Feature-only null:} any observed human alignment is fully explained by easy task features such as size, color counts, or number of train pairs.
+    \item \textbf{No-extra-signal null:} after controlling for the LLM average, the non-LLM system has no leftover human-like signal.
+    \item \textbf{Fixed-accuracy null:} if a system solves exactly this many items, would a random placement of those wins look just as human-aligned?
+    \item \textbf{No-complementarity null:} non-LLMs do not rescue human-easy / LLM-hard items above chance.
+\end{enumerate}
+
+\begin{quote}
+\textbf{Short version.} The LLM aggregate is currently closer to the human ARC-2 difficulty axis than the non-LLM systems are. But the non-LLM systems are not useless or purely random; they add some complementary signal, and one TRM checkpoint looks noticeably more human-like than later, higher-scoring checkpoints.
+\end{quote}
+
+\section{Data and Comparison Space}
+
+The main comparison space is ARC-2 Public Eval, because that is where the current human attempt dataset and the stored model outputs overlap cleanly.
+
+\begin{itemize}
+    \item \textbf{Primary ARC-2 subset:} 110 test pairs with at least 8 human attempts each.
+    \item \textbf{Human benchmark:} item-level human solve rates on those 110 pairs.
+    \item \textbf{LLM reference:} the stored ARC-2 public-eval LLM prediction corpus already used in the main psychometric analysis.
+    \item \textbf{Non-LLM systems:} TRM ARC-AGI-II checkpoints and VARC ARC-2 predictions.
+    \item \textbf{ARC-1 sidecar:} CompressARC, evaluated only on the ARC-1 overlap that reappears inside the ARC-AGI-2 Public Train human file.
+\end{itemize}
+
+The main ARC-2 system profiles used below are:
+
+\begin{itemize}
+    \item \textbf{LLM average:} the mean item-success profile across the stored ARC-2 LLMs.
+    \item \textbf{Best-aligned LLM:} \texttt{claude-opus-4-5-20251101-thinking-16k}.
+    \item \textbf{Best-score LLM:} \texttt{gpt-5-2-2025-12-11-thinking-xhigh}.
+    \item \textbf{TRM mid-training:} \texttt{TRM 361957 pass@2}.
+    \item \textbf{TRM best-score:} \texttt{TRM 651522 pass@2}.
+    \item \textbf{VARC best ARC-2 profile:} \texttt{VARC ARC-2\_ViT pass@2}.
+\end{itemize}
+
+\section{How To Read The Correlations}
+
+The low raw correlations look underwhelming at first glance. They are less underwhelming once we put them in the right context.
+
+\subsection{Human reliability is only moderate}
+
+On the ARC-2 primary subset, the human split-half correlation has:
+
+\begin{itemize}
+    \item median Pearson $r = 0.398$,
+    \item 95\% interval $[0.275, 0.515]$,
+    \item implied full-length reliability $= 0.569$,
+    \item approximate raw-correlation ceiling $= 0.755$.
+\end{itemize}
+
+So a raw item-level correlation around $0.3$ or $0.4$ is not small in the way it would be on a very clean human test. The benchmark itself is noisy.
+
+\subsection{Low-score systems have a wide null band}
+
+For low-accuracy binary systems, the same-accuracy random-placement null is wide. On ARC-2 it spans roughly $[-0.193, 0.191]$ for the systems studied here. That means a raw correlation of $0.11$ may be indistinguishable from random placement at that score level, whereas a raw correlation of $0.21$ can already be meaningful.
+
+This is the main reason I do not want to over-index on the raw correlations alone.
+
+\section{Main ARC-2 Result}
+
+Figure~\ref{fig:alignment} is the cleanest first look. It places each selected system's correlation with human solve rates next to the human split-half band.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{figures/fig09_alignment_band.png}
+    \caption{Selected ARC-2 system profiles compared against the human split-half benchmark. The shaded band is the human split-half 95\% interval; the dashed line is the human split-half median.}
+    \label{fig:alignment}
+\end{figure}
+
+The basic picture is simple:
+
+\begin{itemize}
+    \item The \textbf{LLM average} lands inside the human split-half band ($r = 0.402$, H1 $p = 0.950$).
+    \item The \textbf{best-aligned LLM} also lands inside it ($r = 0.439$, H1 $p = 0.506$).
+    \item The \textbf{best-score LLM} is borderline rather than cleanly outside it ($r = 0.276$, H1 $p = 0.052$).
+    \item The three main \textbf{non-LLM profiles} are below the band and reject the human-equivalence null.
+\end{itemize}
+
+Table~\ref{tab:headline} gives the headline numbers I would actually want in front of me while reading this.
+
+\begin{table}[H]
+\centering
+\caption{Headline ARC-2 results on the 110-pair primary subset. H1 tests human-equivalence against the human split-half distribution. The fixed-accuracy null asks whether the observed human correlation is stronger than a random placement of the same number of wins. H3 tests for residual human signal after controlling for the LLM average.}
+\label{tab:headline}
+\small
+\begin{tabular}{p{2.45in}rrrr}
+\toprule
+\textbf{Profile} & \textbf{Pair Acc.} & \textbf{Human $r$} & \textbf{H1 $p$} & \textbf{Fixed-Acc. $p$ / H3 $p$} \\
+\midrule
+LLM average & 0.108 & 0.402 & 0.950 & --- \\
+Best-aligned LLM (Claude Opus 16k) & 0.164 & 0.439 & 0.506 & 0.000 / --- \\
+Best-score LLM (GPT-5.2 xhigh) & 0.491 & 0.276 & 0.052 & 0.003 / --- \\
+TRM 361957 pass@2 & 0.045 & 0.214 & 0.004 & 0.012 / 0.009 \\
+TRM 651522 pass@2 & 0.109 & 0.113 & 0.0004 & 0.122 / 0.105 \\
+VARC ARC-2\_ViT pass@2 & 0.036 & 0.158 & 0.0004 & 0.053 / 0.034 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The strongest claim I am comfortable making is:
+
+\begin{quote}
+\textbf{On ARC-2, the LLM aggregate is materially closer to the human difficulty structure than the currently stored non-LLM systems are.}
+\end{quote}
+
+That said, there is a real nuance here. The best non-LLM profile is \emph{not} the best-scoring TRM checkpoint. The more human-aligned TRM checkpoint is an earlier one.
+
+\section{Why The Low Correlations Are Still Informative}
+
+Figure~\ref{fig:fixednull} is the graph I most wanted after finishing the first pass. It answers the right skeptical question: ``fine, but are these low correlations better than random placement at the same score level?''
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{figures/fig10_fixed_accuracy_null.png}
+    \caption{Observed correlations against the fixed-accuracy random-placement null. Gray bars show the 95\% null interval given the same number of wins; colored points show the observed system correlation with human solve rates.}
+    \label{fig:fixednull}
+\end{figure}
+
+This changes the interpretation a lot:
+
+\begin{itemize}
+    \item \textbf{TRM 361957} beats the same-accuracy null ($p = 0.012$).
+    \item \textbf{VARC} is right on the edge ($p = 0.053$).
+    \item \textbf{TRM 651522} does \emph{not} beat the same-accuracy null ($p = 0.122$).
+\end{itemize}
+
+This is one of the clearest non-obvious findings in the whole note. The later TRM checkpoint is better at solving ARC items, but not better at solving the \emph{human-like subset} of ARC items. Its extra wins appear to be placed in a less human-shaped way.
+
+\section{Residual Signal After Controls}
+
+The next question is whether the non-LLM systems are merely reacting to easy task features, or whether they retain a weaker version of the human difficulty axis even after simple controls.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig11_residual_signal.png}
+    \caption{Residual human-like structure under two controls. Left: partial correlation after controlling for simple task features. Right: partial correlation after controlling for the LLM average.}
+    \label{fig:residual}
+\end{figure}
+
+There are really two stories here.
+
+\subsection*{After simple task-feature controls}
+
+The feature-only null is too strong:
+
+\begin{itemize}
+    \item LLM average: partial $r = 0.458$, $p < 0.001$
+    \item TRM 361957: partial $r = 0.219$, $p = 0.001$
+    \item VARC: partial $r = 0.157$, $p = 0.001$
+    \item TRM 651522: partial $r = 0.108$, $p = 0.086$
+\end{itemize}
+
+So the observed alignment is not just ``humans and models both like small tasks'' or ``they are both responding to color-count cues.''
+
+\subsection*{After controlling for the LLM average}
+
+This is the tougher test:
+
+\begin{itemize}
+    \item TRM 361957 keeps a modest residual: partial $r = 0.186$, $p = 0.009$, $q = 0.028$
+    \item VARC is borderline: partial $r = 0.145$, $p = 0.034$, $q = 0.052$
+    \item TRM 651522 does not keep a resolved residual: partial $r = 0.117$, $p = 0.112$
+\end{itemize}
+
+This is where I want to stay cautious. There is some residual non-LLM signal, especially for the mid-training TRM checkpoint. But it is small, and at least for VARC it is right on the multiple-testing boundary. So I would call this \emph{real but modest}, not a dramatic separate human-like axis.
+
+\section{Complementarity and TRM Training Dynamics}
+
+The non-LLM systems are not redundant, even though they are less human-aligned overall. The strongest practical result here is complementarity: the TRM+VARC union rescues 6 human-easy / LLM-hard ARC-2 items, above the chance baseline ($p = 0.022$, $q = 0.037$).
+
+That is enough to rule out the strongest version of ``non-LLMs add nothing.'' They do add something. It is just not the \emph{same thing} as being globally closer to the human difficulty axis.
+
+The TRM training curve makes the same point from another angle.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{figures/fig07_trm_trajectory.png}
+    \caption{TRM training dynamics on the ARC-2 human-overlap subset. Accuracy rises over training, but human-alignment peaks earlier and does not rise in lockstep.}
+    \label{fig:trmtraj}
+\end{figure}
+
+The formal trajectory tests are:
+
+\begin{itemize}
+    \item step vs accuracy: Spearman $\rho = 0.850$, $p = 0.002$
+    \item step vs human-correlation: Spearman $\rho = -0.085$, $p = 0.827$
+    \item accuracy vs human-correlation: Spearman $\rho = -0.265$, $p = 0.451$
+\end{itemize}
+
+So training clearly improves benchmark score, but does not clearly improve human-likeness. If anything, the tendency goes the other way, though not significantly in this small checkpoint series.
+
+\section{ARC-1 Sidecar: CompressARC}
+
+There is still no dedicated ARC-1 human benchmark file in the repository, but there is a useful ARC-1 overlap through task reuse in the ARC-AGI-2 Public Train human data. That gives 230 single-pair ARC-1 evaluation tasks with a human split-half median of $0.372$.
+
+The ARC-1 sidecar result is:
+
+\begin{itemize}
+    \item ARC1 LLM average: human $r = 0.285$, H1 $p = 0.057$
+    \item ARC1 best-aligned LLM: human $r = 0.286$, H1 $p = 0.061$
+    \item CompressARC top2: human $r = 0.160$, H1 $p < 0.001$
+    \item CompressARC fixed-accuracy null: $p = 0.005$
+\end{itemize}
+
+So CompressARC is not random with respect to human difficulty. It is doing something real. But it is still not human-equivalent on this overlap, and it does not overturn the main ARC-2 picture.
+
+\section{What I Think This Means}
+
+Here is the most compact synthesis I trust:
+
+\begin{enumerate}
+    \item We can reject the strong null that the current non-LLM systems are psychometrically indistinguishable from humans on ARC-2.
+    \item We should \emph{not} say that the LLM aggregate is ``proven the same as humans.'' A high H1 $p$ is a \emph{fail-to-reject}, not a proof of equality. Still, the LLM aggregate clearly sits much closer to the human split-half benchmark than the non-LLM systems do.
+    \item We can reject the claim that all observed alignment is trivial feature matching.
+    \item We have some evidence for a weak non-LLM residual beyond the LLM average, especially for the mid-training TRM checkpoint, but it is not large enough to anchor a big philosophical claim.
+    \item We can reject the idea that non-LLMs add no complementary value at all.
+\end{enumerate}
+
+So the cleanest overall statement is:
+
+\begin{quote}
+\textbf{The LLM aggregate is currently the closest thing in this repository to the human ARC-2 difficulty axis, but the non-LLM systems still contribute complementary and partly human-relevant structure.}
+\end{quote}
+
+That is a more interesting result than either simplistic extreme. The non-LLM systems are neither just answer-key junk nor a secret hidden route to human-like ARC behavior. They look more like partial alternative solvers: sometimes useful, sometimes idiosyncratic, and not yet globally aligned with the human difficulty landscape.
+
+\section{Limits}
+
+The main limits are straightforward.
+
+\begin{itemize}
+    \item The ARC-2 human subset is only 110 well-sampled test pairs.
+    \item The non-LLM sample is small: one TRM trajectory, one VARC release, one CompressARC artifact.
+    \item The current tests say nothing direct about \emph{process}; they are about item-level difficulty profiles, not internal reasoning traces.
+    \item The ARC-1 sidecar is useful, but it is still a sidecar rather than a dedicated ARC-1 human benchmark.
+\end{itemize}
+
+So this should be read as a careful repository note, not the final word.
+
+\appendix
+
+\section{Extra Robustness Figures}
+
+I do not think these are the core figures, but I still wanted them nearby.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{figures/fig02_threshold_sensitivity.png}
+    \caption{Threshold sensitivity. The main ranking is stable as the minimum human-attempt threshold changes.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{figures/fig01_accuracy_alignment_scatter.png}
+    \caption{Accuracy versus human-alignment on the ARC-2 human-overlap subset. The main point here is that score and human-likeness are related but not interchangeable.}
+\end{figure}
+
+\end{document}
