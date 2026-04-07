@@ -1,0 +1,210 @@
+[
+  {
+    "attempt_1": {
+      "answer": [
+        [
+          0,
+          0,
+          0,
+          5,
+          0,
+          2
+        ],
+        [
+          5,
+          5,
+          5,
+          0,
+          5,
+          2
+        ],
+        [
+          5,
+          5,
+          5,
+          2,
+          0,
+          2
+        ],
+        [
+          5,
+          0,
+          0,
+          0,
+          5,
+          2
+        ],
+        [
+          0,
+          2,
+          0,
+          0,
+          0,
+          5
+        ],
+        [
+          5,
+          2,
+          5,
+          0,
+          5,
+          5
+        ]
+      ],
+      "metadata": {
+        "model": "gemini-3-deep-think-preview",
+        "provider": "curlgemini",
+        "start_timestamp": "2025-11-16T23:28:17.574537+00:00",
+        "end_timestamp": "2025-11-16T23:36:53.196932+00:00",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "user",
+              "content": "You are participating in a puzzle solving competition. You are an expert at solving puzzles.\n\nBelow is a list of input and output pairs with a pattern. Your goal is to identify the pattern or transformation in the training examples that maps the input to the output, then apply that pattern to the test input to give a final output.\n\nRespond in the format of the training output examples\n\n--Training Examples--\n--Example 0-- \n\n INPUT: \n\n[[8, 8, 8, 0, 0, 0], [0, 0, 8, 8, 0, 8], [0, 8, 0, 0, 0, 0], [8, 8, 0, 0, 8, 8], [8, 0, 8, 8, 8, 8], [0, 0, 0, 0, 8, 8]]\n\nOUTPUT: \n\n[[5, 5, 5, 0, 0, 0], [0, 0, 2, 2, 0, 2], [0, 2, 0, 0, 0, 0], [5, 2, 0, 0, 5, 5], [5, 0, 2, 2, 5, 2], [0, 0, 0, 0, 5, 5]]\n\n--Example 1-- \n\n INPUT: \n\n[[8, 8, 0, 8, 8, 0], [8, 0, 8, 8, 8, 0], [0, 0, 8, 8, 8, 8], [0, 8, 0, 0, 8, 8], [8, 8, 0, 8, 0, 8], [8, 0, 0, 8, 0, 8]]\n\nOUTPUT: \n\n[[2, 5, 0, 2, 5, 0], [2, 0, 5, 2, 5, 0], [0, 0, 5, 5, 2, 2], [0, 5, 0, 0, 2, 2], [2, 5, 0, 2, 0, 5], [2, 0, 0, 2, 0, 5]]\n\n--Example 2-- \n\n INPUT: \n\n[[0, 8, 0, 8, 8, 8], [8, 8, 8, 8, 8, 0], [8, 0, 8, 0, 8, 0], [0, 8, 8, 8, 0, 8], [8, 8, 0, 8, 8, 0], [8, 8, 0, 0, 0, 8]]\n\nOUTPUT: \n\n[[0, 2, 0, 5, 5, 2], [2, 2, 5, 2, 2, 0], [5, 0, 2, 0, 5, 0], [0, 5, 2, 5, 0, 5], [2, 2, 0, 2, 2, 0], [5, 2, 0, 0, 0, 2]]\n\n--Example 3-- \n\n INPUT: \n\n[[0, 8, 8, 0, 0, 8], [8, 8, 8, 0, 0, 0], [8, 8, 8, 0, 8, 0], [8, 0, 8, 8, 0, 8], [8, 8, 0, 0, 0, 0], [8, 8, 8, 8, 8, 0]]\n\nOUTPUT: \n\n[[0, 2, 2, 0, 0, 5], [2, 2, 5, 0, 0, 0], [2, 5, 2, 0, 5, 0], [2, 0, 2, 5, 0, 5], [2, 2, 0, 0, 0, 0], [5, 2, 2, 5, 5, 0]]\n\n\n--End of Training Examples--\n\n--Test Input--\n[[0, 0, 0, 8, 0, 8], [8, 8, 8, 0, 8, 8], [8, 8, 8, 8, 0, 8], [8, 0, 0, 0, 8, 8], [0, 8, 0, 0, 0, 8], [8, 8, 8, 0, 8, 8]]\n--End of Test Input--\n\nYour response:"
+            }
+          },
+          {
+            "index": 1,
+            "message": {
+              "role": "assistant",
+              "content": "The Python script has\noutput a specific grid. Comparing it\nwith my candidate responses:\n\nThe script\n's result is:\n`[[\n0, 0, 0,\n5, 0, 2\n], [5, 2,\n5, 0, 5,\n2], [2, 2\n, 2, 2,\n0, 2], [5,\n0, 0, 0\n, 5, 2], [\n0, 2, 0,\n0, 0, 2\n], [5, 2,\n2, 0, 5,\n2]]`\n\nLet's analyze the discrepancies:\n\n1.  **Row 0:** Script gives `... 5 0 2\n` for `... 8 0 8`. My favored manual analysis (Candidate 1) suggested `... 5 0 5`.\n    *   The\n8 at (0,5) is part of a vertical structure or isolated. If it's an endpoint/corner of a connected component, training data suggests 5\n. If it's part of a long run, maybe 2. But usually endpoints are 5. The script predicts 2.\n2.  **Row\n1:** Script gives `5 2 5 0 5 2`.\n    *   The `5 2 5` for `8\n8 8` (1,0)-(1,2) is interesting. A solid block corner often behaves like `5 2 2` or `5\n5 5`.\n    *   The pair `8 8` at (1,4)-(1,5) becoming `5 2`.\n3.\n**Row 5:** Script gives `5 2 2 0 5 2`.\n    *   The `5 2 2\n` corresponds to `8 8 8`.\n    *   The `5 2` at the end corresponds to `8 8`.\n\nThe Gradient Boosting model\nachieves 100% training accuracy, so its prediction is weighty. However, ML models can overfit or miss \"obvious\" geometric rules (like \"corners are\n5\") if the feature set doesn't explicitly capture \"corner-ness\" but relies on coordinate hacks.\n\nLet's look at Candidate 1 again,\nwhich used a Decision Tree (and manual logic check).\nCandidate 1 Output:\n`[[0, 0, 0, 5, 0,\n5], [5, 2, 2, 0, 5, 5], [2, 5, 2, 2\n, 0, 5], [5, 0, 0, 0, 5, 5], [0, 2,\n0, 0, 0, 2], [5, 5, 2, 0, 5, 5]]`\n\nComparison\nRow 0:\nScript: `0 0 0 5 0 2`.\nCand 1: `0 0 0 5\n0 5`.\nDifference at (0,5).\nIn Training Ex 0, (4,0) is a corner of a block (connected down\nand right). Output is 5.\nTest (0,5) is connected down (1,5) and down-left (1,4). It\n's effectively a corner.\nGeometrically, corners are 5s.\nScript says 2. Cand 1 says 5.\nI favor 5.\nComparison Row 1:\nScript: `5 2 5 ...`.\nCand 1: `5 2 2 ...`.\nFor\n`8 8 8` block top.\nEx 0 Row 0 `8 8 8` -> `5 5 5`.\nEx\n3 Row 1 `8 8 8` (Verticals below are long) -> `2 2 5`? No, Ex 3\nRow 1 is `2 2 5`?\nLet's check Ex 3 Row 1 input `8 8 8`.\nOutput `2 2 5`.\nSo `5 2 2` or `2 2 5` or `5 5 5` are\noptions.\nCand 1 chose `5 2 2`.\nScript chose `5 2 5`.\nGiven `5 5 5` in\nEx 0 (short verticals) and `2 2 5` in Ex 3 (long verticals), the Test (mixed/short verticals) might\nbe `5 2 2` or `5 2 5`.\nHowever, usually the \"center\" of a 3-line is 2.\n`5 2 5` implies both ends are corners.\n(1,0) is a corner. (1,2) is a corner.\nSo\n`5 2 5` is actually very plausible geometrically.\nBut Ex 3 Row 1 `2 2 5` suggests top-left can\nbe 2.\n\nLet's look at Candidate 6 (from my thoughts). It predicted `[[0, 0, 0, 5\n, 0, 2], [5, 5, 5, 0, 5, 2], [5, 5,\n5, 2, 0, 2], ...]`.\nIt predicted `5 5 5` for Row 1.\nThis matches Ex 0 Row\n0.\nWhy did the script in this turn predict `5 2 5`?\nBecause I used different features or parameters (Depth 3 vs Depth\n?).\nThe Candidate 6 logic (`5 5 5`) seemed very strong based on vertical length analysis.\n\nLet's re-evaluate the \"Vertical\nRun Length\" theory.\nShort verticals -> Horizontal structure dominates (5s).\nLong verticals -> Vertical structure dominates (2s).\nTest Row 1 verticals are length\n3, 2, 2.\nEx 0 Row 0 verticals were 1, 1, 2. (Very short) ->\n`5 5 5`.\nEx 3 Row 1 verticals were 5, 3, 3. (Long) -> `2 2\n5` (mostly 2s).\nTest is in between (3, 2, 2).\nCloser to Ex 0? (Max\n2 vs Max 3).\nOr Ex 3? (Max 5 vs Max 3).\nMaybe `5 5 5` is the\nright answer.\nOr `5 2 5`.\nHowever, `5 2 2` (Cand 1) seems to be a safe\n\"block\" guess.\n\nLet's verify the \"End of Run\" logic.\n(4,5) and (5,5) in Test.\nVertical\nrun of 6.\nScript says `... 5 2` (Row 3), `... 2` (Row 4), `...\n2` (Row 5).\nWait, script output:\nRow 3: `... 5 2`\nRow 4: `...\n0 2`\nRow 5: `... 5 2`\nSo column 5 is `2, 2, 2`.\nMy\nprevious manual analysis (Cand 6) said `5, 5`.\nWhy? \"Tails are 5\".\nEx 1 Col 5\n(len 4) -> Tail `5 5`.\nEx 3 Col 0 (len 5) -> Tail `5`.\nSo for long runs,\nthe tail is 5.\nThe script prediction of 2 for the tail (5,5) contradicts this strong pattern.\nTherefore, the script (\nGradient Boosting) might be overfitting to position or parity and missing the \"Tail\" rule.\n\nConclusion: The Machine Learning scripts are useful but inconsistent on the \"tails\n\" and \"corners\" of complex shapes.\nI will revert to the Candidate 1 / Candidate 6 hybrid logic which respects the geometric \"rules\" observed\n:\n1.  Ends/Corners are 5.\n2.  Interiors are 2.\n3.  Short runs are 5s\n. Long runs are 2s (mostly).\n\nGrid Construction:\nRow 0: `0 0 0 5 0 5`.\n(0,3 isolated -> 5. 0,5 corner -> 5).\nRow 1: `5 2 2 0 5\n5`. (1,0 corner -> 5. 1,1/1,2 interior/edge -> 2. 1,4 corner -> 5\n. 1,5 edge/tail? -> 5).\n   *   Wait, (1,5) connects to (0,5) and (\n2,5). It is vertical interior.\n   *   Ex 0 Col 4 `0 0 8 8 8 8`.\n(Row 2 is 8). (2,4) is `2`.\n   *   So vertical interior should be 2?\n   *\nCand 1 says (1,5) -> 5.\n   *   Cand 6 says (1,5) -> 2.\n   *\nEx 1 Col 5 (len 4) `0 0 2 2 5 5`. Top is 2.\n   *\nSo top/mid of vertical run is 2.\n   *   Test (1,5) is pos 1 of 6. Top section.\n   *\nSo (1,5) should be 2.\n   *   This supports the Script's output for (1,5).\n   *   And Cand\n1's output `5 5` might be wrong there.\n\nLet's look at Candidate 6 again.\n`[0, 0\n, 0, 5, 0, 2], [5, 5, 5, 0, 5, 2], [5\n, 5, 5, 2, 0, 2], ...`\nIt has 2 for (0,5), (1,5\n), (2,5), (3,5).\nAnd 5 for (4,5), (5,5).\nThis \"Tail is\n5\" logic is strong.\nAnd \"Body is 2\" logic is strong.\nThis implies (0,5) should be 2?\nEx 3 Col 0 `2 2 2 2 5`. Top is 2.\nBut Ex 3 Col 0 starts at\nRow 1. Above is 0.\nTest Col 5 starts at Row 0.\nSo yes, top of long run is 2.\nThis contradicts \"Corner is 5\".\nBut \"Long Run\" rule might override \"Corner\" rule.\nIn Ex 3 (1,0)\nis a corner (Top Left of block). It became 2.\nBecause it was start of Vertical len 5.\nSo Long Vertical > Corner.\nTest\nCol 5 is Vertical len 6.\nSo (0,5) should be 2.\n\nThis shifts my preference to Candidate 6's logic\n.\n\nCandidate 6 Grid:\n[[0, 0, 0, 5, 0, 2],\n [5, 5, 5\n, 0, 5, 2],\n [5, 5, 5, 2, 0, 2],\n [5\n, 0, 0, 0, 5, 2],\n [0, 2, 0, 0, 0,\n5],\n [5, 2, 5, 0, 5, 5]]\n\nLet's verify Row 1 `5\n5 5`.\n(1,0) V=3. (1,1) V=2. (1,2) V=2.\nShort\nverticals.\nEx 0 Row 0 `5 5 5` (V=1,1,2).\nEx 3 Row 1 `2\n2 5` (V=5,3,3).\nTest is closer to Ex 0. `5 5 5` is likely.\nLet's verify Row 2 `5 5 5 2`.\n(2,0) V=3. (2,1) V\n=2. (2,2) V=2. (2,3) V=1.\n(2,3) is End. V=1.\nIn Ex 0 (4,5) End V=3 -> 2.\nIn Ex 0 (0,2) End V=2 -> 5\n.\nIn Ex 0 (4,2) End V=1 -> 2.\nSo End V=1 -> 2.\nSo (2,\n3) is 2.\n(2,0)-(2,2) as `5 5 5`?\n(2,0) is V=3\n. Ex 0 (4,4) V=3 -> 5.\nSo `5 5 5` seems consistent with \"Medium Vertical (\n2-3) + Horizontal = 5\".\n\nLet's verify Row 5 `5 2 5 0 5 5`.\n(5,\n0) V=1. (5,1) V=2. (5,2) V=1.\nEx 0 Row 0 (\nV=1,1,2) `5 5 5`.\nEx 1 Row 5 (V=?,2,?) `2 2\n5`?\nCol 3 in Ex 1 is V=2. (1,3)-(2,3).\nRow 5 in Ex 1\nis `8 0 0 8 0 8`.\n(5,3) is isolated. V=1. Output 2.\n(\n5,5) is isolated. V=1. Output 5.\n(5,0) is isolated? No, V=1? Ex\n1 Col 0 `8 8 0 0 8 8`. V=2. Output 2.\nSo V=2 Tail can\nbe 2.\nTest (5,1) is V=2 Tail.\nSo 2 is plausible.\nResult `5 2 5\n`.\n\nSo Candidate 6 seems the most grounded in deep pattern analysis.\n\nFinal check on (0,5) -> 2.\nIf (0\n,5) is 2, then it looks like:\n`0 0 0 5 0 2`\n`5 5 5\n0 5 2`\n`...`\nThis forms a vertical line of 2s on the right.\nThis matches Ex 3 Left\ncolumn (`2 2 2 2 5`).\nI will proceed with Candidate 6.\n\nOne adjustment: Candidate 6 had (4,5\n) as 5.\n`... 0 5`\n`... 5 5`\nEx 1 Col 5 `... 5 5`.\nEx 3 Col 0 `... 5`.\nSo the tail is 5.\nCandidate 6 had `0, 2,\n0, 0, 0, 5` for Row 4.\nCorrect.\n\nFinal Grid:\n[[0, 0, 0, 5\n, 0, 2], [5, 5, 5, 0, 5, 2], [5, 5,\n5, 2, 0, 2], [5, 0, 0, 0, 5, 2], [0,\n2, 0, 0, 0, 5], [5, 2, 5, 0, 5, 5\n]]\n\nWait, Candidate 6 Row 5 `5 2 5 0 5 5`.\nIs (5,5) 5\n? Yes, tail.\nIs (5,4) 5? H=2 V=1.\nEx 1 Row 4 `0 2\n0 0 2 2`.\n(4,4) H=2 V=1 -> 2?\nInput Ex 1 Row\n4 `8 8 0 8 0 8`.\n(4,3) H=1 V=1 -> 2.\n(4,5\n) H=1 V=? Col 5 V=4.\n(4,1) H=?\nLet's check Ex 1 Row\n4.\nOutput `2 5 0 2 0 5`.\n(4,0) 2. (4,1)\n5. (4,3) 2. (4,5) 5.\n(4,1) H=2 (with 4,\n0). V=2 (with 3,1). Output 5.\n(4,0) H=2. V=2. Output 2.\nTest (5,4) H=2. V=1.\nTest (5,5) H=2. V=6.\nThis\nis a pair `8 8`.\nEx 0 Row 3 `8 8` -> `5 5`.\nEx 1 Row\n0 `8 8` -> `2 5`.\nEx 1 Row 2 `8 8` -> `5 5`.\n`5 5` is common for pairs.\nGiven (5,5) is Tail of V=6 (must be 5), `5 5\n` is consistent.\n\nI am ready.\n\n[[0, 0, 0, 5, 0, 2], [5, 5, 5\n, 0, 5, 2], [5, 5, 5, 2, 0, 2], [5,\n0, 0, 0, 5, 2], [0, 2, 0, 0, 0, 5],\n[5, 2, 5, 0, 5, 5]]\n\n[[0, 0, 0, 5,\n0, 2], [5, 5, 5, 0, 5, 2], [5, 5, 5,\n2, 0, 2], [5, 0, 0, 0, 5, 2], [0, 2\n, 0, 0, 0, 5], [5, 2, 5, 0, 5, 5]]"
+            }
+          }
+        ],
+        "reasoning_summary": null,
+        "kwargs": {
+          "max_output_tokens": 64000,
+          "tools": [
+            {
+              "code_execution": {}
+            }
+          ]
+        },
+        "usage": {
+          "prompt_tokens": 2446543,
+          "completion_tokens": 358411,
+          "total_tokens": 2804954,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "accepted_prediction_tokens": 358411,
+            "rejected_prediction_tokens": 0
+          }
+        },
+        "cost": {
+          "prompt_cost": 0.0,
+          "completion_cost": 0.0,
+          "reasoning_cost": null,
+          "total_cost": 0.0
+        },
+        "task_id": "a8610ef7",
+        "pair_index": 0,
+        "test_id": "gemini-3-deep-think-preview"
+      },
+      "correct": false
+    },
+    "attempt_2": {
+      "answer": [
+        [
+          0,
+          0,
+          0,
+          5,
+          0,
+          5
+        ],
+        [
+          2,
+          5,
+          5,
+          0,
+          5,
+          5
+        ],
+        [
+          2,
+          5,
+          5,
+          2,
+          0,
+          5
+        ],
+        [
+          2,
+          0,
+          0,
+          0,
+          5,
+          5
+        ],
+        [
+          0,
+          5,
+          0,
+          0,
+          0,
+          2
+        ],
+        [
+          5,
+          5,
+          2,
+          0,
+          5,
+          5
+        ]
+      ],
+      "metadata": {
+        "model": "gemini-3-deep-think-preview",
+        "provider": "curlgemini",
+        "start_timestamp": "2025-11-16T23:36:53.198463+00:00",
+        "end_timestamp": "2025-11-16T23:52:09.875916+00:00",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "user",
+              "content": "You are participating in a puzzle solving competition. You are an expert at solving puzzles.\n\nBelow is a list of input and output pairs with a pattern. Your goal is to identify the pattern or transformation in the training examples that maps the input to the output, then apply that pattern to the test input to give a final output.\n\nRespond in the format of the training output examples\n\n--Training Examples--\n--Example 0-- \n\n INPUT: \n\n[[8, 8, 8, 0, 0, 0], [0, 0, 8, 8, 0, 8], [0, 8, 0, 0, 0, 0], [8, 8, 0, 0, 8, 8], [8, 0, 8, 8, 8, 8], [0, 0, 0, 0, 8, 8]]\n\nOUTPUT: \n\n[[5, 5, 5, 0, 0, 0], [0, 0, 2, 2, 0, 2], [0, 2, 0, 0, 0, 0], [5, 2, 0, 0, 5, 5], [5, 0, 2, 2, 5, 2], [0, 0, 0, 0, 5, 5]]\n\n--Example 1-- \n\n INPUT: \n\n[[8, 8, 0, 8, 8, 0], [8, 0, 8, 8, 8, 0], [0, 0, 8, 8, 8, 8], [0, 8, 0, 0, 8, 8], [8, 8, 0, 8, 0, 8], [8, 0, 0, 8, 0, 8]]\n\nOUTPUT: \n\n[[2, 5, 0, 2, 5, 0], [2, 0, 5, 2, 5, 0], [0, 0, 5, 5, 2, 2], [0, 5, 0, 0, 2, 2], [2, 5, 0, 2, 0, 5], [2, 0, 0, 2, 0, 5]]\n\n--Example 2-- \n\n INPUT: \n\n[[0, 8, 0, 8, 8, 8], [8, 8, 8, 8, 8, 0], [8, 0, 8, 0, 8, 0], [0, 8, 8, 8, 0, 8], [8, 8, 0, 8, 8, 0], [8, 8, 0, 0, 0, 8]]\n\nOUTPUT: \n\n[[0, 2, 0, 5, 5, 2], [2, 2, 5, 2, 2, 0], [5, 0, 2, 0, 5, 0], [0, 5, 2, 5, 0, 5], [2, 2, 0, 2, 2, 0], [5, 2, 0, 0, 0, 2]]\n\n--Example 3-- \n\n INPUT: \n\n[[0, 8, 8, 0, 0, 8], [8, 8, 8, 0, 0, 0], [8, 8, 8, 0, 8, 0], [8, 0, 8, 8, 0, 8], [8, 8, 0, 0, 0, 0], [8, 8, 8, 8, 8, 0]]\n\nOUTPUT: \n\n[[0, 2, 2, 0, 0, 5], [2, 2, 5, 0, 0, 0], [2, 5, 2, 0, 5, 0], [2, 0, 2, 5, 0, 5], [2, 2, 0, 0, 0, 0], [5, 2, 2, 5, 5, 0]]\n\n\n--End of Training Examples--\n\n--Test Input--\n[[0, 0, 0, 8, 0, 8], [8, 8, 8, 0, 8, 8], [8, 8, 8, 8, 0, 8], [8, 0, 0, 0, 8, 8], [0, 8, 0, 0, 0, 8], [8, 8, 8, 0, 8, 8]]\n--End of Test Input--\n\nYour response:"
+            }
+          },
+          {
+            "index": 1,
+            "message": {
+              "role": "assistant",
+              "content": "Based on the analysis of the training examples, the transformation of `8`s into `2`s and `5`s depends on the local 5x5 neighborhood\nof each pixel. A decision tree model trained on 5x5 patches of the training data achieves 100% accuracy, capturing complex rules involving orthogonal and\ndiagonal connectivity.\n\nKey observed rules include:\n*   **Isolated `8`s** (orthogonally) with diagonal neighbors map to **5**.\n(e.g., `(0,3)`).\n*   **Tips** of lines generally map to **5**, especially if they have diagonal connections. (e.g\n., `(0,5)`, `(5,0)`, `(5,5)`).\n*   **T-junctions** and **Crosses** often map to\n**5**.\n*   **Straight line segments** and **Corners** often map to **2**, particularly if they are \"enclosed\" or form the boundary\nof a block. (e.g., `(4,5)` is a vertical segment flanked by diagonals, mapping to `2`).\n\nApplying this model to the Test\nInput yields the following grid:\n\n[[0, 0, 0, 5, 0, 5], [2, 5,\n5, 0, 5, 5], [2, 5, 5, 2, 0, 5], [2,\n0, 0, 0, 5, 5], [0, 5, 0, 0, 0, 2\n], [5, 5, 2, 0, 5, 5]]"
+            }
+          }
+        ],
+        "reasoning_summary": null,
+        "kwargs": {
+          "max_output_tokens": 64000,
+          "tools": [
+            {
+              "code_execution": {}
+            }
+          ]
+        },
+        "usage": {
+          "prompt_tokens": 2597877,
+          "completion_tokens": 428297,
+          "total_tokens": 3026174,
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "accepted_prediction_tokens": 428297,
+            "rejected_prediction_tokens": 0
+          }
+        },
+        "cost": {
+          "prompt_cost": 0.0,
+          "completion_cost": 0.0,
+          "reasoning_cost": null,
+          "total_cost": 0.0
+        },
+        "task_id": "a8610ef7",
+        "pair_index": 0,
+        "test_id": "gemini-3-deep-think-preview"
+      },
+      "correct": false
+    }
+  }
+]

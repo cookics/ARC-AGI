@@ -1,0 +1,286 @@
+[
+    {
+        "attempt_1": {
+            "answer": [
+                [
+                    0,
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    1,
+                    0
+                ]
+            ],
+            "metadata": {
+                "model": "claude-haiku-4-5-20251001",
+                "provider": "anthropic",
+                "start_timestamp": "2025-10-15T20:14:40.732123+00:00",
+                "end_timestamp": "2025-10-15T20:14:48.796363+00:00",
+                "choices": [
+                    {
+                        "index": 0,
+                        "message": {
+                            "role": "user",
+                            "content": "You are participating in a puzzle solving competition. You are an expert at solving puzzles.\n\nBelow is a list of input and output pairs with a pattern. Your goal is to identify the pattern or transformation in the training examples that maps the input to the output, then apply that pattern to the test input to give a final output.\n\nRespond in the format of the training output examples\n\n--Training Examples--\n--Example 0-- \n\n INPUT: \n\n[[8, 0, 0], [0, 8, 0], [0, 0, 0]]\n\nOUTPUT: \n\n[[0, 2, 2], [2, 0, 2], [2, 2, 2]]\n\n--Example 1-- \n\n INPUT: \n\n[[0, 0, 3], [0, 3, 0], [3, 0, 0]]\n\nOUTPUT: \n\n[[1, 1, 0], [1, 0, 1], [0, 1, 1]]\n\n--Example 2-- \n\n INPUT: \n\n[[5, 0, 0], [5, 5, 0], [5, 0, 0]]\n\nOUTPUT: \n\n[[0, 4, 4], [0, 0, 4], [0, 4, 4]]\n\n--Example 3-- \n\n INPUT: \n\n[[5, 5, 5], [0, 0, 5], [0, 0, 0]]\n\nOUTPUT: \n\n[[0, 0, 0], [4, 4, 0], [4, 4, 4]]\n\n--Example 4-- \n\n INPUT: \n\n[[0, 8, 0], [0, 8, 0], [8, 0, 0]]\n\nOUTPUT: \n\n[[2, 0, 2], [2, 0, 2], [0, 2, 2]]\n\n--Example 5-- \n\n INPUT: \n\n[[8, 0, 8], [0, 8, 0], [0, 8, 0]]\n\nOUTPUT: \n\n[[0, 2, 0], [2, 0, 2], [2, 0, 2]]\n\n\n--End of Training Examples--\n\n--Test Input--\n[[3, 0, 0], [3, 3, 3], [0, 0, 3]]\n--End of Test Input--\n\nYour response:"
+                        }
+                    },
+                    {
+                        "index": 1,
+                        "message": {
+                            "role": "assistant",
+                            "content": "# Analysis of Pattern\n\nLooking at the training examples, I can identify the transformation rule:\n\n1. **Identify the non-zero value** in the input matrix\n2. **Swap and map values:**\n   - Where input has the **non-zero value** \u2192 output becomes **0**\n   - Where input has **0** \u2192 output becomes a **specific replacement value**\n\nThe replacement value depends on the non-zero value in the input:\n- Input value 8 \u2192 zeros become 2\n- Input value 3 \u2192 zeros become 1\n- Input value 5 \u2192 zeros become 4\n\nFor the test input `[[3, 0, 0], [3, 3, 3], [0, 0, 3]]`:\n- Non-zero value is **3**\n- Based on Example 1, when the non-zero value is 3, zeros become **1**\n- Therefore: 3 \u2192 0, and 0 \u2192 1\n\n# Output:\n\n[[0, 1, 1], [0, 0, 0], [1, 1, 0]]"
+                        }
+                    }
+                ],
+                "reasoning_summary": "Let me analyze the pattern by examining each example:\n\nExample 0:\nINPUT: [[8, 0, 0], [0, 8, 0], [0, 0, 0]]\nOUTPUT: [[0, 2, 2], [2, 0, 2], [2, 2, 2]]\n\nWhere input has 8, output has 0\nWhere input has 0, output has 2\n\nExample 1:\nINPUT: [[0, 0, 3], [0, 3, 0], [3, 0, 0]]\nOUTPUT: [[1, 1, 0], [1, 0, 1], [0, 1, 1]]\n\nWhere input has 3, output has 0\nWhere input has 0, output has 1\n\nExample 2:\nINPUT: [[5, 0, 0], [5, 5, 0], [5, 0, 0]]\nOUTPUT: [[0, 4, 4], [0, 0, 4], [0, 4, 4]]\n\nWhere input has 5, output has 0\nWhere input has 0, output has 4\n\nExample 3:\nINPUT: [[5, 5, 5], [0, 0, 5], [0, 0, 0]]\nOUTPUT: [[0, 0, 0], [4, 4, 0], [4, 4, 4]]\n\nWhere input has 5, output has 0\nWhere input has 0, output has 4\n\nSo the pattern is:\n- Where input has the non-zero value (the number that appears), output has 0\n- Where input has 0, output has a specific number that depends on the input value\n\nLooking at the mapping:\n- Input value 8 \u2192 zeros become 2\n- Input value 3 \u2192 zeros become 1\n- Input value 5 \u2192 zeros become 4\n\nWait, let me check: 8 -> 2, 3 -> 1, 5 -> 4\n\n\nI'll verify the pattern for the new test input. When the non-zero value is 3, zeros should become 1. This matches the previous observation from Example 1. The output follows the established rule of replacing zeros with a specific value based on the input's non-zero number.\n\nBy systematically checking each position, I confirm the output matches the expected transformation. The matrix changes according to the consistent rule: 3 becomes 0, and 0 becomes 1, creating a predictable pattern across the input grid.",
+                "kwargs": {
+                    "max_tokens": 64000,
+                    "stream": true,
+                    "thinking": {
+                        "type": "enabled",
+                        "budget_tokens": 1024
+                    }
+                },
+                "usage": {
+                    "prompt_tokens": 601,
+                    "completion_tokens": 1130,
+                    "total_tokens": 1731,
+                    "completion_tokens_details": {
+                        "reasoning_tokens": 0,
+                        "accepted_prediction_tokens": 1130,
+                        "rejected_prediction_tokens": 0
+                    }
+                },
+                "cost": {
+                    "prompt_cost": 0.000601,
+                    "completion_cost": 0.0056500000000000005,
+                    "reasoning_cost": null,
+                    "total_cost": 0.0062510000000000005
+                },
+                "task_id": "6ea4a07e",
+                "pair_index": 0,
+                "test_id": "claude-haiku-4-5-20251001-thinking-1k"
+            },
+            "correct": null
+        },
+        "attempt_2": {
+            "answer": [
+                [
+                    0,
+                    1,
+                    1
+                ],
+                [
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    1,
+                    0
+                ]
+            ],
+            "metadata": {
+                "model": "claude-haiku-4-5-20251001",
+                "provider": "anthropic",
+                "start_timestamp": "2025-10-15T20:14:48.796813+00:00",
+                "end_timestamp": "2025-10-15T20:14:58.430370+00:00",
+                "choices": [
+                    {
+                        "index": 0,
+                        "message": {
+                            "role": "user",
+                            "content": "You are participating in a puzzle solving competition. You are an expert at solving puzzles.\n\nBelow is a list of input and output pairs with a pattern. Your goal is to identify the pattern or transformation in the training examples that maps the input to the output, then apply that pattern to the test input to give a final output.\n\nRespond in the format of the training output examples\n\n--Training Examples--\n--Example 0-- \n\n INPUT: \n\n[[8, 0, 0], [0, 8, 0], [0, 0, 0]]\n\nOUTPUT: \n\n[[0, 2, 2], [2, 0, 2], [2, 2, 2]]\n\n--Example 1-- \n\n INPUT: \n\n[[0, 0, 3], [0, 3, 0], [3, 0, 0]]\n\nOUTPUT: \n\n[[1, 1, 0], [1, 0, 1], [0, 1, 1]]\n\n--Example 2-- \n\n INPUT: \n\n[[5, 0, 0], [5, 5, 0], [5, 0, 0]]\n\nOUTPUT: \n\n[[0, 4, 4], [0, 0, 4], [0, 4, 4]]\n\n--Example 3-- \n\n INPUT: \n\n[[5, 5, 5], [0, 0, 5], [0, 0, 0]]\n\nOUTPUT: \n\n[[0, 0, 0], [4, 4, 0], [4, 4, 4]]\n\n--Example 4-- \n\n INPUT: \n\n[[0, 8, 0], [0, 8, 0], [8, 0, 0]]\n\nOUTPUT: \n\n[[2, 0, 2], [2, 0, 2], [0, 2, 2]]\n\n--Example 5-- \n\n INPUT: \n\n[[8, 0, 8], [0, 8, 0], [0, 8, 0]]\n\nOUTPUT: \n\n[[0, 2, 0], [2, 0, 2], [2, 0, 2]]\n\n\n--End of Training Examples--\n\n--Test Input--\n[[3, 0, 0], [3, 3, 3], [0, 0, 3]]\n--End of Test Input--\n\nYour response:"
+                        }
+                    },
+                    {
+                        "index": 1,
+                        "message": {
+                            "role": "assistant",
+                            "content": "# Analysis\n\nLooking at the training examples, I can identify the pattern:\n\n1. **Where there's a non-zero value in the input \u2192 output is 0**\n2. **Where there's a 0 in the input \u2192 output is a specific replacement value**\n\nThe replacement value depends on the non-zero value in the input:\n- 8 \u2192 replace 0s with 2\n- 3 \u2192 replace 0s with 1  \n- 5 \u2192 replace 0s with 4\n\nFor the test input with non-zero value **3**, the replacement value is **1** (following Example 1's pattern).\n\n# Test Output\n\n[[0, 1, 1], [0, 0, 0], [1, 1, 0]]"
+                        }
+                    }
+                ],
+                "reasoning_summary": "Let me analyze the pattern by comparing inputs and outputs:\n\nExample 0:\nINPUT: [[8, 0, 0], [0, 8, 0], [0, 0, 0]]\nOUTPUT: [[0, 2, 2], [2, 0, 2], [2, 2, 2]]\n\nWhere there's a non-zero (8), output is 0 or the non-zero value. Where there's 0, output is 2.\n- Position (0,0): input=8, output=0\n- Position (0,1): input=0, output=2\n- Position (0,2): input=0, output=2\n- Position (1,0): input=0, output=2\n- Position (1,1): input=8, output=0\n- Position (1,2): input=0, output=2\n- Position (2,0): input=0, output=2\n- Position (2,1): input=0, output=2\n- Position (2,2): input=0, output=2\n\nSo it seems: if input is 0, output is some value; if input is non-zero, output is 0.\n\nLet me verify with Example 1:\nINPUT: [[0, 0, 3], [0, 3, 0], [3, 0, 0]]\nOUTPUT: [[1, 1, 0], [1, 0, 1], [0, 1, 1]]\n\n- Position (0,0): input=0, output=1\n- Position (0,1): input=0, output=1\n- Position (0,2): input=3, output=0\n- Position (1,0): input=0, output=1\n- Position (1,1): input=3, output=0\n- Position (1,2): input=0, output=1\n- Position (2,0): input=3, output=0\n- Position (2,1): input=0, output=1\n\n\n- Position (2,2): input=0, output=1\n\nI notice a consistent transformation rule emerging. When zero appears, the output becomes 1, and when a non-zero value exists, the output becomes 0. The non-zero values seem to follow a specific calculation pattern, possibly involving division or subtraction.\n\nLooking at various examples, I see different transformations:\n- 8 reduces to 2\n- 3 reduces to 1\n- 5 reduces to 4\n\nFor the test input with multiple 3s, I apply the discovered rule: non-zero values become 0, zero values become 1. This results in a transformed matrix where the original pattern is systematically applied.\n\nThe key observation is the consistent zero-to-one and non-zero-to-zero conversion, with nuanced calculations for the specific output values based on the input's magnitude.",
+                "kwargs": {
+                    "max_tokens": 64000,
+                    "stream": true,
+                    "thinking": {
+                        "type": "enabled",
+                        "budget_tokens": 1024
+                    }
+                },
+                "usage": {
+                    "prompt_tokens": 601,
+                    "completion_tokens": 1052,
+                    "total_tokens": 1653,
+                    "completion_tokens_details": {
+                        "reasoning_tokens": 0,
+                        "accepted_prediction_tokens": 1052,
+                        "rejected_prediction_tokens": 0
+                    }
+                },
+                "cost": {
+                    "prompt_cost": 0.000601,
+                    "completion_cost": 0.005260000000000001,
+                    "reasoning_cost": null,
+                    "total_cost": 0.005861000000000001
+                },
+                "task_id": "6ea4a07e",
+                "pair_index": 0,
+                "test_id": "claude-haiku-4-5-20251001-thinking-1k"
+            },
+            "correct": null
+        }
+    },
+    {
+        "attempt_1": {
+            "answer": [
+                [
+                    4,
+                    0,
+                    4
+                ],
+                [
+                    0,
+                    0,
+                    4
+                ],
+                [
+                    4,
+                    4,
+                    0
+                ]
+            ],
+            "metadata": {
+                "model": "claude-haiku-4-5-20251001",
+                "provider": "anthropic",
+                "start_timestamp": "2025-10-15T20:14:58.430895+00:00",
+                "end_timestamp": "2025-10-15T20:15:06.112181+00:00",
+                "choices": [
+                    {
+                        "index": 0,
+                        "message": {
+                            "role": "user",
+                            "content": "You are participating in a puzzle solving competition. You are an expert at solving puzzles.\n\nBelow is a list of input and output pairs with a pattern. Your goal is to identify the pattern or transformation in the training examples that maps the input to the output, then apply that pattern to the test input to give a final output.\n\nRespond in the format of the training output examples\n\n--Training Examples--\n--Example 0-- \n\n INPUT: \n\n[[8, 0, 0], [0, 8, 0], [0, 0, 0]]\n\nOUTPUT: \n\n[[0, 2, 2], [2, 0, 2], [2, 2, 2]]\n\n--Example 1-- \n\n INPUT: \n\n[[0, 0, 3], [0, 3, 0], [3, 0, 0]]\n\nOUTPUT: \n\n[[1, 1, 0], [1, 0, 1], [0, 1, 1]]\n\n--Example 2-- \n\n INPUT: \n\n[[5, 0, 0], [5, 5, 0], [5, 0, 0]]\n\nOUTPUT: \n\n[[0, 4, 4], [0, 0, 4], [0, 4, 4]]\n\n--Example 3-- \n\n INPUT: \n\n[[5, 5, 5], [0, 0, 5], [0, 0, 0]]\n\nOUTPUT: \n\n[[0, 0, 0], [4, 4, 0], [4, 4, 4]]\n\n--Example 4-- \n\n INPUT: \n\n[[0, 8, 0], [0, 8, 0], [8, 0, 0]]\n\nOUTPUT: \n\n[[2, 0, 2], [2, 0, 2], [0, 2, 2]]\n\n--Example 5-- \n\n INPUT: \n\n[[8, 0, 8], [0, 8, 0], [0, 8, 0]]\n\nOUTPUT: \n\n[[0, 2, 0], [2, 0, 2], [2, 0, 2]]\n\n\n--End of Training Examples--\n\n--Test Input--\n[[0, 5, 0], [5, 5, 0], [0, 0, 5]]\n--End of Test Input--\n\nYour response:"
+                        }
+                    },
+                    {
+                        "index": 1,
+                        "message": {
+                            "role": "assistant",
+                            "content": "# Analysis\n\nLooking at the training examples, I can identify the pattern:\n\n1. Each input has exactly one non-zero value repeated across the matrix\n2. The transformation inverts the matrix:\n   - Where there's a non-zero value \u2192 becomes 0\n   - Where there's 0 \u2192 becomes a different value\n\nThe output value mapping based on the input non-zero value:\n- 8 \u2192 use 2\n- 3 \u2192 use 1  \n- 5 \u2192 use 4\n\nFor the test input, the non-zero value is **5**, so:\n- 5 \u2192 0\n- 0 \u2192 4\n\n--Test Output--\n\n[[4, 0, 4], [0, 0, 4], [4, 4, 0]]"
+                        }
+                    }
+                ],
+                "reasoning_summary": "Let me analyze the pattern in these examples.\n\nLooking at Example 0:\nINPUT: [[8, 0, 0], [0, 8, 0], [0, 0, 0]]\nOUTPUT: [[0, 2, 2], [2, 0, 2], [2, 2, 2]]\n\nWhere INPUT has 8, OUTPUT has 0\nWhere INPUT has 0, OUTPUT has 2\n\nLooking at Example 1:\nINPUT: [[0, 0, 3], [0, 3, 0], [3, 0, 0]]\nOUTPUT: [[1, 1, 0], [1, 0, 1], [0, 1, 1]]\n\nWhere INPUT has 3, OUTPUT has 0\nWhere INPUT has 0, OUTPUT has 1\n\nLooking at Example 2:\nINPUT: [[5, 0, 0], [5, 5, 0], [5, 0, 0]]\nOUTPUT: [[0, 4, 4], [0, 0, 4], [0, 4, 4]]\n\nWhere INPUT has 5, OUTPUT has 0\nWhere INPUT has 0, OUTPUT has 4\n\nLooking at Example 3:\nINPUT: [[5, 5, 5], [0, 0, 5], [0, 0, 0]]\nOUTPUT: [[0, 0, 0], [4, 4, 0], [4, 4, 4]]\n\nWhere INPUT has 5, OUTPUT has 0\nWhere INPUT has 0, OUTPUT has 4\n\nLooking at Example 4:\nINPUT: [[0, 8, 0], [0, 8, 0], [8, 0, 0]]\nOUTPUT: [[2, 0, 2], [2, 0, 2], [0, 2, 2]]\n\nWhere INPUT has 8, OUTPUT has 0\nWhere INPUT has 0, OUTPUT has 2\n \nI notice a consistent transformation rule emerging across these matrices. When a non-zero value appears in the input, it becomes 0 in the output. Conversely, zero positions in the input are replaced with a specific number that seems to correlate with the original non-zero value. The replacement number appears to follow a systematic pattern based on the magnitude of the original non-zero input value.\n\nFor the specific example with 5 as the non-zero value, the transformation maps 5 to 0 and 0 to 4, resulting in a new matrix configuration that maintains the structural relationship of the original input while completely changing the numeric values.",
+                "kwargs": {
+                    "max_tokens": 64000,
+                    "stream": true,
+                    "thinking": {
+                        "type": "enabled",
+                        "budget_tokens": 1024
+                    }
+                },
+                "usage": {
+                    "prompt_tokens": 601,
+                    "completion_tokens": 915,
+                    "total_tokens": 1516,
+                    "completion_tokens_details": {
+                        "reasoning_tokens": 0,
+                        "accepted_prediction_tokens": 915,
+                        "rejected_prediction_tokens": 0
+                    }
+                },
+                "cost": {
+                    "prompt_cost": 0.000601,
+                    "completion_cost": 0.004575,
+                    "reasoning_cost": null,
+                    "total_cost": 0.005176
+                },
+                "task_id": "6ea4a07e",
+                "pair_index": 1,
+                "test_id": "claude-haiku-4-5-20251001-thinking-1k"
+            },
+            "correct": null
+        },
+        "attempt_2": {
+            "answer": [
+                [
+                    4,
+                    0,
+                    4
+                ],
+                [
+                    0,
+                    0,
+                    4
+                ],
+                [
+                    4,
+                    4,
+                    0
+                ]
+            ],
+            "metadata": {
+                "model": "claude-haiku-4-5-20251001",
+                "provider": "anthropic",
+                "start_timestamp": "2025-10-15T20:15:06.112976+00:00",
+                "end_timestamp": "2025-10-15T20:15:15.815889+00:00",
+                "choices": [
+                    {
+                        "index": 0,
+                        "message": {
+                            "role": "user",
+                            "content": "You are participating in a puzzle solving competition. You are an expert at solving puzzles.\n\nBelow is a list of input and output pairs with a pattern. Your goal is to identify the pattern or transformation in the training examples that maps the input to the output, then apply that pattern to the test input to give a final output.\n\nRespond in the format of the training output examples\n\n--Training Examples--\n--Example 0-- \n\n INPUT: \n\n[[8, 0, 0], [0, 8, 0], [0, 0, 0]]\n\nOUTPUT: \n\n[[0, 2, 2], [2, 0, 2], [2, 2, 2]]\n\n--Example 1-- \n\n INPUT: \n\n[[0, 0, 3], [0, 3, 0], [3, 0, 0]]\n\nOUTPUT: \n\n[[1, 1, 0], [1, 0, 1], [0, 1, 1]]\n\n--Example 2-- \n\n INPUT: \n\n[[5, 0, 0], [5, 5, 0], [5, 0, 0]]\n\nOUTPUT: \n\n[[0, 4, 4], [0, 0, 4], [0, 4, 4]]\n\n--Example 3-- \n\n INPUT: \n\n[[5, 5, 5], [0, 0, 5], [0, 0, 0]]\n\nOUTPUT: \n\n[[0, 0, 0], [4, 4, 0], [4, 4, 4]]\n\n--Example 4-- \n\n INPUT: \n\n[[0, 8, 0], [0, 8, 0], [8, 0, 0]]\n\nOUTPUT: \n\n[[2, 0, 2], [2, 0, 2], [0, 2, 2]]\n\n--Example 5-- \n\n INPUT: \n\n[[8, 0, 8], [0, 8, 0], [0, 8, 0]]\n\nOUTPUT: \n\n[[0, 2, 0], [2, 0, 2], [2, 0, 2]]\n\n\n--End of Training Examples--\n\n--Test Input--\n[[0, 5, 0], [5, 5, 0], [0, 0, 5]]\n--End of Test Input--\n\nYour response:"
+                        }
+                    },
+                    {
+                        "index": 1,
+                        "message": {
+                            "role": "assistant",
+                            "content": "# Analysis\n\nLooking at the training examples, I can identify the pattern:\n\n1. **Non-zero values are replaced with 0**\n2. **Zero values are replaced with a specific number** that depends on what the non-zero value was:\n   - When non-zero is 8 \u2192 zeros become 2\n   - When non-zero is 3 \u2192 zeros become 1\n   - When non-zero is 5 \u2192 zeros become 4\n\nIn the test input, the non-zero value is 5, so:\n- All 5s \u2192 0\n- All 0s \u2192 4\n\n--Test Output--\n\n[[4, 0, 4], [0, 0, 4], [4, 4, 0]]"
+                        }
+                    }
+                ],
+                "reasoning_summary": "Let me analyze the pattern in the training examples.\n\nExample 0:\nINPUT: [[8, 0, 0], [0, 8, 0], [0, 0, 0]]\nOUTPUT: [[0, 2, 2], [2, 0, 2], [2, 2, 2]]\n\nWhere there's 8 in input, there's 0 in output.\nWhere there's 0 in input, there's 2 in output.\n\nExample 1:\nINPUT: [[0, 0, 3], [0, 3, 0], [3, 0, 0]]\nOUTPUT: [[1, 1, 0], [1, 0, 1], [0, 1, 1]]\n\nWhere there's 3 in input, there's 0 in output.\nWhere there's 0 in input, there's 1 in output.\n\nExample 2:\nINPUT: [[5, 0, 0], [5, 5, 0], [5, 0, 0]]\nOUTPUT: [[0, 4, 4], [0, 0, 4], [0, 4, 4]]\n\nWhere there's 5 in input, there's 0 in output.\nWhere there's 0 in input, there's 4 in output.\n\nExample 3:\nINPUT: [[5, 5, 5], [0, 0, 5], [0, 0, 0]]\nOUTPUT: [[0, 0, 0], [4, 4, 0], [4, 4, 4]]\n\nWhere there's 5 in input, there's 0 in output.\nWhere there's 0 in input, there's 4 in output.\n\nExample 4:\nINPUT: [[0, 8, 0], [0, 8, 0], [8, 0, 0]]\n\n\nOUTPUT: [[2, 0, 2], [2, 0, 2], [0, 2, 2]]\n\nI notice a consistent transformation rule emerging. Specific numbers in the input grid are systematically replaced with 0, while empty spaces are filled with incrementing values. The replacement seems to follow a positional logic, with the value depending on the original number's location in the grid.\n\nExample 5:\nINPUT: [[8, 0, 8], [0, 8, 0], [0, 8, 0]]\nOUTPUT: [[0, 2, 0], [2, 0, 2], [2, 0, 2]]\n\nThe pattern continues to show a predictable mapping between input and output grid configurations.\n\nI'm exploring potential transformation rules that might explain the systematic changes. Different non-zero values appear to trigger specific output responses, suggesting a nuanced mapping strategy based on the input's numeric composition.\n\nFor the test input with 5, the transformation yields a clear output pattern: [[4, 0, 4], [0, 0, 4], [4, 4, 0]]. This reinforces the observation of a structured, rule-based grid transformation.",
+                "kwargs": {
+                    "max_tokens": 64000,
+                    "stream": true,
+                    "thinking": {
+                        "type": "enabled",
+                        "budget_tokens": 1024
+                    }
+                },
+                "usage": {
+                    "prompt_tokens": 601,
+                    "completion_tokens": 1112,
+                    "total_tokens": 1713,
+                    "completion_tokens_details": {
+                        "reasoning_tokens": 0,
+                        "accepted_prediction_tokens": 1112,
+                        "rejected_prediction_tokens": 0
+                    }
+                },
+                "cost": {
+                    "prompt_cost": 0.000601,
+                    "completion_cost": 0.005560000000000001,
+                    "reasoning_cost": null,
+                    "total_cost": 0.006161000000000001
+                },
+                "task_id": "6ea4a07e",
+                "pair_index": 1,
+                "test_id": "claude-haiku-4-5-20251001-thinking-1k"
+            },
+            "correct": null
+        }
+    }
+]
