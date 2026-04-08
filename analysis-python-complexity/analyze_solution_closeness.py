@@ -14,7 +14,9 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 BASE_DIR = Path(__file__).resolve().parent
 PSYCH_DIR = ROOT_DIR / "data-llm"
 
-HUMAN_TABLE_PATH = ROOT_DIR / "analysis-human" / "analysis" / "tables" / "public_eval_human_vs_models.csv"
+HUMAN_TABLE_PATH = (
+    ROOT_DIR / "analysis-human" / "papers" / "human-testing" / "tables" / "public_eval_human_vs_models.csv"
+)
 APPROVED_LLM_PATH = BASE_DIR / "approved_llm_complexity_join.csv"
 HUMAN_OVERLAP_PATH = BASE_DIR / "human_llm_overlap_tasks.csv"
 

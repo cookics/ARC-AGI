@@ -25,7 +25,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT_DIR = SCRIPT_DIR.parent
 
 HUMAN_CSV = ROOT_DIR / "data-human" / "test_pair_attempts.csv"
-ANALYSIS_DIR = SCRIPT_DIR / "analysis"
+ANALYSIS_DIR = SCRIPT_DIR / "papers" / "human-testing"
 FIGURES_DIR = ANALYSIS_DIR / "figures"
 TABLES_DIR = ANALYSIS_DIR / "tables"
 TASK_PANELS_DIR = ANALYSIS_DIR / "task_panels"
@@ -849,7 +849,7 @@ def write_report(
         "",
         "## Scope",
         "",
-        "This report analyzes the locally downloaded `arc_agi_2_human_testing` file (`Human data/test_pair_attempts.csv`) in the context of the ARC-AGI-2 task JSONs and the ARC-AGI-2 model prediction folder in this workspace.",
+        "This report analyzes the locally downloaded `arc_agi_2_human_testing` file (`data-human/test_pair_attempts.csv`) in the context of the ARC-AGI-2 task JSONs and the ARC-AGI-2 model prediction folder in this workspace.",
         "",
         "## Data Structure",
         "",

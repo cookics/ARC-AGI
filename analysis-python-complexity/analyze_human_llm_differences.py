@@ -9,7 +9,9 @@ import seaborn as sns
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 BASE_DIR = Path(__file__).resolve().parent
-HUMAN_TABLE_PATH = ROOT_DIR / "analysis-human" / "analysis" / "tables" / "public_eval_human_vs_models.csv"
+HUMAN_TABLE_PATH = (
+    ROOT_DIR / "analysis-human" / "papers" / "human-testing" / "tables" / "public_eval_human_vs_models.csv"
+)
 APPROVED_LLM_PATH = BASE_DIR / "approved_llm_complexity_join.csv"
 
 COMPLEXITY_METRICS = [
@@ -478,7 +480,7 @@ def main():
         "",
         "## Scope",
         "",
-        "- Human source: `analysis-human/analysis/tables/public_eval_human_vs_models.csv`",
+        "- Human source: `analysis-human/papers/human-testing/tables/public_eval_human_vs_models.csv`",
         "- LLM source: `analysis-python-complexity/approved_llm_complexity_join.csv`",
         "- Comparison scope: approved ARC-AGI-2 eval tasks that also appear in the public human testing table",
         f"- Overlap: {len(overlap)} tasks total, {len(well_sampled)} with at least 8 total human attempts",

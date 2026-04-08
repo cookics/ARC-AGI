@@ -1,0 +1,71 @@
+\section{Repository Data and Methods}
+
+\subsection{Why the methods section has to be repository-wide}
+
+The most important methodological fact about this project is that it is not one dataset with one estimator. It is a layered repository of partially overlapping datasets, each motivating a different unit of analysis. Human data are sparse session-by-item attempts on ARC-AGI-2 tasks. LLM data are largely exact-match model-by-task matrices on public evaluation sets. Non-LLM data come from a mixed set of evaluator submissions and processed summaries. Solver complexity data are derived from validated Python programs, which are task-level objects rather than pair-level behavioral observations. Cross-ARC linkage works by combining benchmark metadata, human latent estimates, and common-model LLM summaries. The efficiency package introduces performance, duration, token, and cost fields that are not naturally commensurate across source families. A credible master paper therefore cannot simply report results in sequence. It must make the data structure and unit structure explicit up front.
+
+\subsection{Canonical data roots}
+
+The repository now separates canonical data from active analyses. The human root contains the ARC-AGI-2 attempt log with one row per human task-pair attempt, including session IDs, timing, submission counts, and correctness. The LLM root contains official ARC-AGI-1 and ARC-AGI-2 task JSONs plus public-eval prediction corpora used to build exact-match response matrices. The non-LLM root contains raw and processed artifacts for CompressARC, VARC, and TRM-derived materials. The Python-program root contains the approved-only solver package used by the complexity line, along with provenance and validation summaries. That repository layout matters because it reduces the risk that manuscript sections drift away from the canonical data they are supposed to be describing.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Repository-scale data objects used in the master paper.}
+\begin{tabular}{p{1.2in}p{1.3in}p{1.5in}p{2.1in}}
+\toprule
+\textbf{Workstream} & \textbf{Primary unit} & \textbf{Scope used here} & \textbf{Main methodological risk} \\
+\midrule
+Human testing & Session-by-pair attempts & 4,681 attempts, 509 sessions, 502 task-pair rows & Sparse, opportunistic sampling; low matrix density \\
+LLM psychometrics & Model-by-task exact-match matrix & 24 frontier models on ARC public evaluation plus broader 203-model benchmark sidecar & Deterministic test takers break ordinary psychometric assumptions \\
+Non-LLM psychometrics & System-by-pair prediction profiles & ARC-2 Public Eval overlap plus ARC-1 sidecar artifacts & Very low accuracies compress attainable raw profile correlations \\
+Solver complexity & Task-level validated Python solver & 120 approved validated programs from a 511-file crawl & Final solver is not the same object as human pair-level burden \\
+Cross-ARC linkage & Derived task-level latent summaries & ARC-1 sidecar, ARC-2 eval, ARC-2 train-other benchmark slices & Benchmark linkage is informative but not equivalence \\
+Efficiency & Source-family rollups and shared-task rows & 29 LLM runs, 509 human sessions, 15 non-LLM rows, 115 shared ARC-2 tasks & Effort measures are not naturally commensurate across source families \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Human data and the consequences of sparse coverage}
+
+The core human file contains 4,681 attempts across 509 sessions, 442 task IDs, and 502 task-pair rows. Human coverage is sparse and opportunistic rather than exam-like. Only 40.4\% of all ARC-AGI-2 public task pairs appear in the observed human table, and the implied session-by-item matrix has density around 1.83\%. The dataset also mixes Public Train and Public Eval attempts, with Public Eval generally being the more important overlap region for cross-system comparison.
+
+These facts drive several downstream choices. First, the human package works at the pair level whenever possible, because people submit answers to individual test pairs rather than to an abstract task object. Second, reliability has to be estimated rather than assumed. The human analyses repeatedly use split-half simulations as a reference for how strong any external alignment could reasonably look on noisy human item means. Third, latent estimates are often safer than raw means. The cross-ARC package shows that partial-pooling latent task estimates are more stable than raw solve rates under session split-halves in all three benchmark slices it constructs.
+
+The human pipeline also has to distinguish clearly between descriptive and inferential claims. A raw public table can say that humans solved one pair more often than another. It cannot by itself say whether a model-to-human correlation is ``high'' without a reliability anchor. That is why the repo repeatedly estimates split-half baselines, latent task scores, and partial-pooling variants before it tries to compare humans to machine systems. In this manuscript, any interpretation of human similarity is therefore benchmarked against the human data's own internal reproducibility rather than against an abstract psychometric ideal.
+
+\subsection{LLM response matrices and deterministic test takers}
+
+The LLM side is built around exact-match public-evaluation response matrices. A task is scored as correct only if all test pairs are solved. This decision has two important consequences. It preserves the leaderboard-relevant notion of task success, but it also compresses behavior to binary task-level observations. That makes the LLM matrices unusually clean but also removes within-model variability that ordinary human psychometrics takes for granted.
+
+The LLM psychometric work therefore treats models as deterministic test takers. PCA, Rasch-style models, Loevinger scalability, and broader manifold comparisons are all still possible, but significance testing has to be handled differently. The package responds by using permutation-based inference that respects row and column marginals, rather than treating the matrix as if it were generated by noisy repeated respondents.
+
+This distinction is easy to lose in a cross-source paper, but it is one of the main safeguards against overclaiming. A Pearson correlation between human solve rates and average-model pass rates is not a person-to-person agreement coefficient. It is a comparison between a noisy human item summary and a deterministic machine profile. Likewise, a Rasch-like difficulty estimate on the model side is a useful latent coordinate, but its inferential semantics are not identical to those of a human item calibration study. The paper therefore treats the LLM psychometric package as structurally informative rather than as a literal drop-in replacement for classical human test theory.
+
+\subsection{Non-LLM artifacts and trusted overlap}
+
+The non-LLM line is narrower and messier. TRM data come from evaluator submissions saved at multiple training steps. VARC data come from stored prediction dumps. CompressARC contributes a trusted ARC-1 evaluation artifact with task order reconstruction and a local scorer. The most important design decision in the non-LLM paper is to center the ARC-AGI-2 Public Eval overlap where human attempts and machine predictions actually coexist, then to use an ARC-1 sidecar only as auxiliary context rather than pretending it is the main comparison space.
+
+The non-LLM package's strongest methodological move is that it does not rely on raw item-profile correlations alone. It adds threshold sensitivity, fixed-accuracy random-placement nulls, feature controls, accuracy-matched LLM baselines, complementarity tests, and training-trajectory checks. Those are essential because the non-LLM systems often have very low task accuracy, which mechanically compresses the range of raw profile correlations.
+
+The upshot is that the non-LLM section cannot be read using the same expectations as the LLM section. The LLM package asks whether a structured response matrix reveals a common latent ability axis. The non-LLM package asks whether currently available non-LLM profiles carry human-relevant item structure despite low absolute score, tiny overlap, and mixed artifact provenance. Those are both valid questions, but they are not interchangeable ones.
+
+\subsection{Validated solver complexity as a separate data object}
+
+The solver-complexity package begins by validating the program corpus instead of assuming that all downloaded code is trustworthy. A total of 511 \texttt{solution.py} files were fetched from \texttt{arc.huikang.dev}, but only 127 passed validation against the official task JSONs. The approved status label turned out to be the decisive filter: 120 of 120 approved solutions passed, whereas almost all submitted or attempted solutions did not. The final complexity package therefore analyzes only the 120-task approved subset.
+
+That validated subset is then treated as its own data object. The complexity panel includes static metrics such as nonblank lines, token counts, AST nodes, branching, cyclomatic complexity, nesting depth, gzip bytes, and Halstead measures, plus dynamic metrics such as opcode counts, Python call counts, runtime, and peak memory. PCA is used to identify dominant axes, and a set of single-metric and composite predictors is evaluated against human, LLM, and non-LLM difficulty summaries.
+
+\subsection{Task-level versus pair-level mismatch}
+
+One methodological tension runs through the whole repository: task-level final-solver objects are being compared to pair-level and task-level behavioral summaries. This mismatch is not a minor nuisance. The final program that solves a task is a task-level object. Human behavior, by contrast, often varies meaningfully across different test pairs within the same task. The human package explicitly finds substantial within-task heterogeneity, and task fixed effects explain much, but not all, of pair-level variance. Any strong interpretation of the solver-complexity results therefore has to acknowledge that final solver structure may miss part of the burden humans experience.
+
+\subsection{Inference conventions carried across the manuscript}
+
+Despite the heterogeneous data objects, the repository does converge on a common inferential style. Correlation claims are generally paired with bootstrap confidence intervals and permutation or bootstrap p-values. Claim families that were pre-specified in the local reports are typically corrected with Benjamini-Hochberg false-discovery control. Human reliability is benchmarked with split-half resampling. Model-comparison and residual analyses use paired difference-of-correlation logic so that the same sampled tasks are compared against two outcomes rather than against unmatched datasets. Prediction-style addenda, such as the closeness augmentation and efficiency package, use leave-one-out or cross-validated summaries to separate descriptive in-sample fit from minimal out-of-sample usefulness.
+
+This shared inferential style matters because the master paper is not trying to launder every exploratory correlation into a headline result. Some findings remain descriptive. Some are statistically supported but still narrow because the overlap is tiny. Some were explicitly downgraded after audit. The paper therefore keeps a distinction between central retained claims, suggestive follow-ups, and attractive but weakened results.
+
+\subsection{How the master narrative is assembled}
+
+The manuscript uses a simple rule for deciding what becomes central. A result moves toward the center if it satisfies most of the following conditions: it rests on canonical rather than ad hoc data objects; it survives a methodological audit; it generalizes across more than one closely related estimator; it remains interpretable after accounting for overlap limitations; and it helps connect two or more workstreams rather than living inside one isolated folder. By that standard, the strongest retained results are the LLM structural-difficulty finding, the human-versus-LLM complexity asymmetry, the human split-half contextualization of model alignment, the latent-over-raw stability gain in the sparse human data, and the negative top line on current non-LLM human-likeness. The most important downgraded result is the original thinking-advantage headline, which became much weaker after label verification and floor-sensitive checks.

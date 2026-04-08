@@ -10,7 +10,9 @@ from sklearn.linear_model import LinearRegression
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 BASE_DIR = Path(__file__).resolve().parent
-HUMAN_PUBLIC_EVAL_PATH = ROOT_DIR / "analysis-human" / "analysis" / "tables" / "public_eval_human_vs_models.csv"
+HUMAN_PUBLIC_EVAL_PATH = (
+    ROOT_DIR / "analysis-human" / "papers" / "human-testing" / "tables" / "public_eval_human_vs_models.csv"
+)
 OVERLAP_PATH = BASE_DIR / "human_llm_overlap_tasks.csv"
 
 sns.set_theme(style="whitegrid", context="talk")

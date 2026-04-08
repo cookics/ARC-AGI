@@ -1,0 +1,70 @@
+\section{Solver Complexity}
+
+\subsection{Goal}
+
+The goal of the solver-complexity line was to test the strongest integrative hypothesis in the repo: when ARC tasks require more structurally complex successful solvers, does that burden show up equally for humans, LLMs, and non-LLM systems, or does it load differently across source families?
+
+\subsection{Data}
+
+The starting point is a validated corpus of Python ARC solvers. A total of 511 \texttt{solution.py} files were fetched from \texttt{arc.huikang.dev}, but only 127 passed validation against the official ARC task files. The decisive filter turned out to be the site's approved label: 120 of 120 approved solvers passed. The main analysis therefore uses the 120-task approved-only package and joins it to human difficulty summaries, LLM difficulty summaries, and smaller non-LLM overlap slices.
+
+\subsection{Methods}
+
+The complexity panel includes static structural metrics such as token count, AST node count, branching, cyclomatic complexity, nesting depth, gzip bytes, and Halstead measures, plus dynamic runtime-style metrics such as opcode counts, Python call counts, elapsed time, and peak memory. The workstream uses PCA to summarize the panel, single-metric and composite correlations against difficulty summaries, paired difference-of-correlation tests, residualization to separate shared from source-specific burden, and later pooled benchmark-standardized extensions in the cross-ARC package.
+
+\subsection{Experiment}
+
+The main experiment ran in three layers. First, it asked whether the complexity panel is dominated by one structural axis or many unrelated ones. Second, it tested which complexity measures best predict LLM difficulty. Third, it asked whether the same measures predict human difficulty equally well on the matched overlap. Later addenda then stress-tested the result with residual analyses, softer output-closeness metrics, thinking-model audits, and pooled cross-ARC extensions.
+
+\subsection{Results}
+
+The first result is that the complexity panel is structured rather than arbitrary. PC1 explains 57.4\% of variance and behaves like overall solver size and structural density, while later components track runtime or footprint more weakly. The second result is that validated solver structure predicts LLM difficulty strongly. Earlier latent analyses found AST node count around $r = 0.666$ against latent difficulty, and the approved-only analysis found log-transformed cyclomatic complexity around $r = 0.707$ against simple LLM logit difficulty.
+
+The third result is the most important in the whole repository. Humans and LLMs do share a real common difficulty axis on the approved overlap, with human difficulty versus LLM difficulty around $r = 0.531$ and human solve rate versus average-model pass rate around $r = 0.541$. But solver structure does not load equally on the two sides. Cyclomatic complexity correlates only weakly with human difficulty, about $r = 0.150$, while correlating much more strongly with LLM difficulty, about $r = 0.591$. The paired difference survives correction at about $\Delta r = 0.441$, with $p = 0.0378$ and $q = 0.0472$.
+
+Residual analyses sharpen the same point. After removing shared human difficulty, residual LLM difficulty still tracks cyclomatic complexity at about $r = 0.603$. On the human side, the distinctive burden looks more duration- and search-like than structure-like. The human addenda reinforce that reading by showing that pair-level human difficulty tracks human duration much more strongly than raw board size and that within-task human heterogeneity is substantial.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Key solver-complexity results carried into the master paper.}
+\begin{tabular}{p{3.25in}p{1.6in}}
+\toprule
+\textbf{Quantity} & \textbf{Value} \\
+\midrule
+Fetched solver files & 511 \\
+Validated solver files & 127 \\
+Approved and validated solvers & 120 / 120 \\
+Best single-metric LLM predictor (earlier latent line) & AST nodes, $r = 0.666$ \\
+Best approved-only LLM predictor & $\log(1 + \mathrm{cyclomatic})$, $r = 0.707$ \\
+Human difficulty vs LLM difficulty & $r = 0.531$ \\
+Human solve rate vs LLM pass rate & $r = 0.541$ \\
+Cyclomatic vs human difficulty & $r = 0.150$ \\
+Cyclomatic vs LLM difficulty & $r = 0.591$ \\
+Human-vs-LLM delta for cyclomatic & $\Delta r = 0.441$, $q = 0.0472$ \\
+Residual LLM difficulty vs cyclomatic & $r = 0.603$, $q = 0.0194$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{chart_synthesis_throughline.png}
+    \caption{Through-line synthesis chart from the complexity package. The visual argument is the same as the statistical one: there is a shared human/LLM axis, followed by a split in what explains the residual burden.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{chart_synthesis_human_pair_level.png}
+    \caption{Human-side pair-level structure from the complexity synthesis. Human burden is more time- and interaction-sensitive than a pure final-solver-size story would predict.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{chart_synthesis_stats_forest.png}
+    \caption{Key hypothesis estimates with confidence intervals from the statistical audit. The most important surviving difference claim is that solver structure is more strongly linked to LLM difficulty than to human difficulty.}
+\end{figure}
+
+\subsection{Why this section matters for the rest of the paper}
+
+This is the section that turns the repository from a pile of comparisons into an argument. The paper's main thesis is not just that humans and models overlap on ARC. It is that they overlap on one difficulty axis while loading differently on final-solver structure, time cost, and pair-level heterogeneity. That interpretation comes primarily from the solver-complexity line.

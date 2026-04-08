@@ -2,7 +2,7 @@
 
 ## Scope
 
-- Human source: `analysis-human/analysis/tables/public_eval_human_vs_models.csv`
+- Human source: `analysis-human/papers/human-testing/tables/public_eval_human_vs_models.csv`
 - LLM source: `analysis-python-complexity/approved_llm_complexity_join.csv`
 - Comparison scope: approved ARC-AGI-2 eval tasks that also appear in the public human testing table
 - Overlap: 17 tasks total, 14 with at least 8 total human attempts

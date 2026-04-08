@@ -1,0 +1,264 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{caption}
+\graphicspath{{../../}}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+
+\title{ARC Approved-Solver Complexity, Human Difficulty, and LLM Difficulty}
+\author{}
+\date{April 7, 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Overview}
+
+This note consolidates the work done on the \texttt{120} approved ARC Python solvers and the linked human/LLM psychometric data. The central question was whether solver complexity tracks task difficulty, and if so, whether it tracks \emph{human} difficulty and \emph{LLM} difficulty in the same way.
+
+The short answer is that the results look \textbf{focused rather than random}:
+
+\begin{itemize}
+  \item Humans and LLMs share a real difficulty axis.
+  \item The \textbf{LLM-specific} part of difficulty is more aligned with \textbf{structural solver complexity}.
+  \item The \textbf{human-specific} part of difficulty is more aligned with \textbf{time/search burden} and with \textbf{within-task heterogeneity across test pairs}.
+  \item The earlier negative \texttt{thinking\_advantage} result weakened materially after label auditing and floor diagnostics, so it should not be treated as a settled substantive claim.
+\end{itemize}
+
+\section*{Data}
+
+\begin{itemize}
+  \item Solver set: \texttt{120} approved ARC \texttt{solution.py} files, validated as correct.
+  \item Complexity panel: all \texttt{120} approved files.
+  \item LLM psychometric overlap: \texttt{56} approved eval rows (\texttt{38} ARC-1 eval, \texttt{18} ARC-2 eval).
+  \item Human-vs-LLM task overlap: \texttt{17} approved ARC-2 eval tasks.
+  \item Human pair-level analysis: \texttt{110} public-eval task-pair rows with at least \texttt{8} human attempts.
+  \item Multi-pair heterogeneity analysis: \texttt{90} pair rows across \texttt{44} tasks with multiple test pairs.
+\end{itemize}
+
+\section*{Methods and Null Hypotheses}
+
+\textbf{Estimators.}
+
+\begin{itemize}
+  \item Pearson correlations for association claims
+  \item Bootstrap 95\% confidence intervals
+  \item Permutation p-values for correlation tests
+  \item Benjamini-Hochberg FDR correction across the main claim table
+  \item Bootstrap differences of correlations for human-vs-LLM comparison claims
+  \item Grouped binomial GLMs for \texttt{thinking\_advantage}
+  \item OLS residualization for shared-vs-specific analyses
+\end{itemize}
+
+\textbf{Null hypotheses.}
+
+\begin{itemize}
+  \item Shared-axis null: human and LLM outcomes are unrelated across tasks.
+  \item Difference-of-correlation null: a predictor is equally associated with human and LLM difficulty.
+  \item Residual null: after removing the shared human/LLM axis, residual difficulty is unrelated to the proposed predictor.
+  \item Human pair-level null: human pair difficulty is unrelated to the tested pair feature.
+  \item Thinking-gap null: the thinking-vs-standard gap is unrelated to difficulty, or the GLM interaction is zero.
+\end{itemize}
+
+\section*{Complexity Result}
+
+The earliest robust signal was that \textbf{structural code size} correlates strongly with difficulty in this benchmark family.
+
+\begin{itemize}
+  \item Best single structural proxy on the earlier latent-scale analysis: \texttt{ast\_node\_count}, $r = 0.666$
+  \item Best conservative composite from PCR: leave-one-out $r = 0.691$
+  \item On the expanded LLM analysis, \texttt{log1p(cyclomatic\_complexity)} reached $r = 0.707$ against simple LLM logit difficulty
+\end{itemize}
+
+The interpretation is not ``longer programs are universally harder problems.'' It is narrower: in a tightly standardized single-task domain like ARC, the amount of structured solver machinery needed to express a correct rule tracks task difficulty surprisingly well.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\linewidth]{chart_pca_overview.png}
+  \caption{PCA view of the complexity panel. A large structural component dominates, with additional runtime and grid-size components.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\linewidth]{chart_prediction_comparison.png}
+  \caption{Best single complexity metric versus a conservative composite predictor. Structural metrics dominate runtime measures as predictors of difficulty.}
+\end{figure}
+
+\section*{Through-Line}
+
+The strongest through-line is:
+
+\begin{enumerate}
+  \item Humans and LLMs share a meaningful difficulty axis.
+  \item Once that shared axis is removed, the leftover human difficulty and leftover LLM difficulty do \emph{not} look the same.
+  \item LLM-specific residual difficulty still looks like solver structure.
+  \item Human-specific residual difficulty looks more like search/time burden, and pair-level human data show substantial within-task heterogeneity that task-level solver metrics cannot capture.
+\end{enumerate}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{chart_synthesis_throughline.png}
+  \caption{Main through-line figure: a shared human/LLM axis, followed by a human-vs-LLM split in the residual structure.}
+\end{figure}
+
+\section*{Strongest Supported Claims}
+
+\begin{center}
+\small
+\begin{tabular}{p{2.8in}cccc}
+\toprule
+Claim & Estimate & 95\% CI & p & q \\
+\midrule
+Human difficulty aligns with LLM difficulty (S1) & $r=0.531$ & $[0.178, 0.780]$ & 0.0268 & 0.0366 \\
+Human solve rate aligns with LLM pass rate (S2) & $r=0.541$ & $[0.226, 0.781]$ & 0.0187 & 0.0280 \\
+Cyclomatic is more LLM-linked than human-linked (D1) & $\Delta r=0.441$ & $[0.024, 0.909]$ & 0.0378 & 0.0472 \\
+Residual LLM difficulty still tracks cyclomatic (D4) & $r=0.603$ & $[0.284, 0.816]$ & 0.0117 & 0.0194 \\
+Human pair difficulty tracks duration (H1) & $r=0.391$ & $[0.238, 0.539]$ & $1.67\times10^{-4}$ & $3.57\times10^{-4}$ \\
+Duration is more informative than board size (H3) & $\Delta r=0.487$ & $[0.255, 0.713]$ & $1.25\times10^{-4}$ & $3.57\times10^{-4}$ \\
+More test pairs shrink the human-over-LLM gap (H4) & $r=-0.366$ & $[-0.539, -0.165]$ & $3.33\times10^{-4}$ & $6.25\times10^{-4}$ \\
+Task fixed effects explain pair-level difficulty variation (H5) & $R^2=0.749$ & NA & $7.93\times10^{-5}$ & $3.57\times10^{-4}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Internal consistency checks.}
+The older shared-model latent scale and the pooled Rasch scale are almost identical ($r=0.991$), and pooled Rasch versus simple LLM logit difficulty is also near-identical ($r=0.970$). This matters because it shows the LLM difficulty signal is not fragile to the exact psychometric construction.
+
+\section*{Residual Analyses}
+
+\textbf{Human residual after removing LLM difficulty.}
+
+\begin{itemize}
+  \item Model: human difficulty regressed on LLM difficulty
+  \item Residual human difficulty versus mean human duration: $r = 0.470$
+  \item 95\% CI $[0.067, 0.766]$, $p = 0.0505$, $q = 0.0583$
+\end{itemize}
+
+This is suggestive but not strong enough to elevate to the main corrected claim set. It still points in a consistent direction: the \textbf{human-specific} part of difficulty looks more time/search-like.
+
+\textbf{LLM residual after removing human difficulty.}
+
+\begin{itemize}
+  \item Model: LLM difficulty regressed on human difficulty
+  \item Residual LLM difficulty versus cyclomatic complexity: $r = 0.603$
+  \item 95\% CI $[0.284, 0.816]$, $p = 0.0117$, $q = 0.0194$
+\end{itemize}
+
+This is the cleanest evidence that solver structure carries an \textbf{LLM-specific} signal, not just a generic difficulty effect shared with humans.
+
+\section*{Human Pair-Level Structure}
+
+The pair-level human data add an important layer that task-level solver complexity cannot see.
+
+\begin{itemize}
+  \item Human pair difficulty tracks mean duration: $r = 0.391$
+  \item Raw board size alone is weak for human difficulty: $r = -0.096$, $p = 0.311$
+  \item More test pairs shrink the human-over-LLM gap: $r = -0.366$
+  \item Mean within-task difficulty range across multi-pair tasks: $0.719$
+  \item Maximum within-task difficulty range: $2.498$
+\end{itemize}
+
+This matters because a single task can contain very different human difficulty across its test pairs, while the solver-complexity analysis has only one program per task.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{chart_synthesis_human_pair_level.png}
+  \caption{Human-side pair-level structure. Human difficulty is more time/search-like than board-size-like, and within-task heterogeneity is substantial.}
+\end{figure}
+
+\section*{Thinking-Advantage Audit}
+
+The original result looked strong under the legacy grouping:
+
+\begin{itemize}
+  \item raw \texttt{thinking\_advantage} versus difficulty: $r=-0.492$, $p=1.67\times10^{-4}$
+  \item legacy grouped-binomial GLM interaction: $-0.718$, $p=5.70\times10^{-6}$
+\end{itemize}
+
+But the label audit found five low-certainty assignments that materially mattered:
+
+\begin{itemize}
+  \item \texttt{QwQ-32B-Fireworks}
+  \item \texttt{gemini-3-pro-preview}
+  \item \texttt{gpt-5-pro-2025-10-06}
+  \item \texttt{gpt-5-2-pro-2025-12-11-high}
+  \item \texttt{gpt-5-2-pro-2025-12-11-medium}
+\end{itemize}
+
+Under the source-backed verified grouping:
+
+\begin{itemize}
+  \item standard-group zero-success items: $35/56$
+  \item thinking-group zero-success items: $0/56$
+  \item both-zero items: $0/56$
+\end{itemize}
+
+And the negative gap becomes unstable:
+
+\begin{itemize}
+  \item all rows: raw $r=-0.378$, logit-gap $r=-0.294$
+  \item standard-nonzero subset: raw $r=0.280$, logit-gap $r=0.091$
+  \item both-groups-interior subset: raw $r=-0.009$, logit-gap $r=-0.156$
+\end{itemize}
+
+So the responsible interpretation is that the negative \texttt{thinking\_advantage} result is an \textbf{audited, fragile finding}, not a settled substantive claim.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{chart_synthesis_thinking_audit.png}
+  \caption{Thinking-advantage audit. The legacy negative result is not robust after source-backed relabeling and floor-sensitive subsetting.}
+\end{figure}
+
+\section*{What Did Not Clearly Survive}
+
+\begin{center}
+\small
+\begin{tabular}{p{2.8in}cccc}
+\toprule
+Claim & Estimate & 95\% CI & p & q \\
+\midrule
+Duration: human $>$ LLM (D2) & $\Delta r=0.374$ & $[-0.058, 0.803]$ & 0.0820 & 0.0879 \\
+Residual human $\sim$ duration (D3) & $r=0.470$ & $[0.067, 0.766]$ & 0.0505 & 0.0583 \\
+Board size predicts human difficulty (H2) & $r=-0.096$ & $[-0.275, 0.086]$ & 0.3110 & 0.3110 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Why This Looks Focused}
+
+If these were just disconnected correlations, I would expect them to scatter in unrelated directions. Instead, they line up into a coherent geometry:
+
+\begin{enumerate}
+  \item Independent LLM difficulty constructions collapse onto one axis.
+  \item Human and LLM difficulty share a moderate common axis.
+  \item Structural solver metrics repeatedly favor the LLM side.
+  \item Human duration and pair-level heterogeneity repeatedly favor the human side.
+  \item The one attractive extra story, \texttt{thinking\_advantage}, is exactly the result that weakened when the labeling and floor assumptions were stress-tested.
+\end{enumerate}
+
+That last point is important: the pipeline did not simply preserve every interesting result. It also downgraded one when the diagnostics stopped supporting it.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\linewidth]{chart_synthesis_stats_forest.png}
+  \caption{Key claims with confidence intervals and FDR-adjusted q-values.}
+\end{figure}
+
+\section*{Bottom Line}
+
+The most defensible statement from the full analysis is:
+
+\begin{quote}
+In approved ARC solvers, structural program complexity is a strong proxy for LLM task difficulty, while human-specific difficulty looks more search/time-like and more sensitive to within-task heterogeneity. Humans and LLMs share part of the same difficulty axis, but not all of it.
+\end{quote}
+
+\end{document}

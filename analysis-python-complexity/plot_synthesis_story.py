@@ -16,7 +16,9 @@ KEY_TESTS_PATH = BASE_DIR / "statistical_hypothesis_key_tests.csv"
 THINKING_SENS_PATH = BASE_DIR / "thinking_advantage_sensitivity.csv"
 THINKING_SCHEMA_PATH = BASE_DIR / "thinking_schema_task_metrics.csv"
 WITHIN_TASK_PATH = BASE_DIR / "human_public_eval_within_task_heterogeneity.csv"
-HUMAN_PUBLIC_EVAL_PATH = ROOT_DIR / "analysis-human" / "analysis" / "tables" / "public_eval_human_vs_models.csv"
+HUMAN_PUBLIC_EVAL_PATH = (
+    ROOT_DIR / "analysis-human" / "papers" / "human-testing" / "tables" / "public_eval_human_vs_models.csv"
+)
 LABEL_AUDIT_PATH = BASE_DIR / "thinking_label_audit.csv"
 LLM_APPROVED_JOIN_PATH = BASE_DIR / "approved_llm_complexity_join.csv"
 

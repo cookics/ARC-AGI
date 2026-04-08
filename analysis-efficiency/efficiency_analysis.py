@@ -28,7 +28,7 @@ from statsmodels.stats.anova import anova_lm
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR.parent
 LLM_DATA_ROOT = REPO_ROOT / "data-llm"
-HUMAN_ANALYSIS_ROOT = REPO_ROOT / "analysis-human" / "analysis"
+HUMAN_ANALYSIS_ROOT = REPO_ROOT / "analysis-human" / "papers" / "human-testing"
 NON_LLM_DATA_ROOT = REPO_ROOT / "data-non-llm"
 
 LLM_V1_ROOT = LLM_DATA_ROOT / "arc_agi_v1_public_eval"
@@ -37,7 +37,7 @@ LLM_V2_ROOT = LLM_DATA_ROOT / "arc_agi_v2_public_eval"
 HUMAN_TABLES = HUMAN_ANALYSIS_ROOT / "tables"
 NON_LLM_PROCESSED = NON_LLM_DATA_ROOT / "processed"
 
-OUT_DIR = SCRIPT_DIR
+OUT_DIR = SCRIPT_DIR / "papers" / "efficiency"
 FIGURES_DIR = OUT_DIR / "figures"
 TABLES_DIR = OUT_DIR / "tables"
 
@@ -1131,7 +1131,7 @@ def build_report(
     lines.append("")
     lines.append("## Figures")
     for path in figure_paths:
-        lines.append(f"- {path.as_posix()}")
+        lines.append(f"- {path.relative_to(OUT_DIR).as_posix()}")
     return "\n".join(lines)
 
 
@@ -1224,8 +1224,6 @@ def build_latex_report(
     lines.append(r"\usepackage{graphicx}")
     lines.append(r"\usepackage{hyperref}")
     lines.append(r"\usepackage{amsmath}")
-    lines.append(r"\usepackage{siunitx}")
-    lines.append(r"\sisetup{detect-all}")
     lines.append(r"\title{Efficiency comparison across LLM, human, and non-LLM ARC analyses}")
     lines.append(r"\author{Codex analysis}")
     lines.append(r"\date{\today}")
@@ -1276,7 +1274,7 @@ def build_latex_report(
     lines.append(r"\section{Figures}")
     lines.append(r"\begin{itemize}")
     for path in figure_paths:
-        lines.append(f"\\item \\texttt{{{latex_escape(path.as_posix())}}}")
+        lines.append(f"\\item \\texttt{{{latex_escape(path.relative_to(OUT_DIR).as_posix())}}}")
     lines.append(r"\end{itemize}")
     lines.append(r"\includegraphics[width=\linewidth]{figures/source_tradeoff.png}")
     lines.append(r"\includegraphics[width=\linewidth]{figures/task_correlation_heatmap.png}")

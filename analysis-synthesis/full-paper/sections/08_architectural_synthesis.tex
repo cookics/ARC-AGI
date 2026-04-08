@@ -1,0 +1,47 @@
+\section{Architectural Synthesis}
+
+\subsection{Why the external literature belongs inside the same paper}
+
+The repository does not only contain empirical comparison packages. It also contains a separate synthesis of four recent ARC solver papers: URM, TRM, VARC, and McGovern's test-time adaptation study. At first glance, that literature review might look like a side project. In practice, it may be the clearest mechanistic frame for the mixed empirical picture the repo keeps finding. The architecture section therefore should not be treated as optional context. It is the place where the full paper explains why the empirical divergence across humans, LLMs, and non-LLM systems might exist.
+
+\subsection{What ARC demands from a solver}
+
+The external synthesis starts from two simple but load-bearing facts about ARC itself. The sample budget is tiny: two to four demonstrations is not enough to fit a flexible learner from scratch. And evaluation is pixel-perfect: a single wrong cell fails the task. Together these constraints push successful systems toward strong priors, discrete hypothesis maintenance, and some kind of test-time refinement or selection loop. This matters because it links the external architecture papers back to the internal empirical results. If ARC inherently rewards structured iterative search under strong inductive bias, then it becomes more plausible that final solver structure would track model difficulty strongly and that some non-LLM systems would solve complementary items even before they look broadly human-like.
+
+\subsection{The common loop}
+
+The existing synthesis paper argues that these non-LLM architectures all converge on one computational loop. They encode the task with strong inductive bias, iteratively refine a hypothesis, decode a candidate answer, and select or marginalize across candidates at test time. The details differ. URM and TRM use recurrent or looped computation. VARC uses vision priors and test-time training. McGovern studies what survives when test-time adaptation is squeezed under strict compute limits. But the common pattern remains the same: strong priors plus structured test-time search.
+
+\subsection{URM and the case for recurrent depth}
+
+URM provides one of the clearest ablation stories in the external bundle. Under an equal compute multiplier, reallocating compute from non-shared depth toward recurrent weight-shared passes improves ARC-AGI-1 pass@1 from about 23.75\% to 40.0\%. The paper's interpretation is that iterative refinement is a better use of compute than simply adding more distinct layers for ARC-style reasoning. URM also reports that the nonlinear gated MLP path is load-bearing and that certain recurrence-training choices, such as truncated backpropagation through loops, matter substantially.
+
+Why does that matter for the repo-wide story? Because it gives a mechanistic candidate for why ARC difficulty might look strongly structure-loaded to LLM-like systems. If successful solution requires repeated structured transformation of a latent hypothesis, then tasks with more branching, object bookkeeping, or nested logic should demand more iterative updates. That is very close to what the internal solver-complexity line is measuring.
+
+\subsection{TRM and the latent scratchpad interpretation}
+
+TRM arrives at a more interpretable version of the same broad idea. Instead of emphasizing recurrence mainly as efficient depth, TRM frames the hidden state as containing both a candidate answer and a reasoning scratchpad. The model is tiny, around 7M parameters, yet reaches roughly 45\% pass@1 on ARC-AGI-1 in the cited paper. Test-time augmentation is central rather than secondary, with about 1000 transformed views contributing to plurality voting.
+
+This matters for the master paper because TRM illustrates both the promise and the current limits of non-LLM ARC progress. Architecturally, it is exactly the kind of system that might expose a more human-relevant inductive bias or search loop. Empirically, in the current repo it still does not align with human difficulty especially well on the primary ARC-2 overlap. The combined interpretation is not that TRM is uninteresting. It is that promising mechanism and current psychometric human-likeness are not the same thing.
+
+\subsection{VARC and visual inductive bias}
+
+VARC makes the boldest representational claim: ARC is primarily a vision problem rather than a language problem. Its core move is to treat ARC tasks as image-to-image transformations on a canvas with two-dimensional inductive bias. The paper's own ablations support this strongly. Replacing 2D rotary positional encoding with 1D positional encoding drops pass@2 from about 54.5\% to 51.0\%, and the broader package shows very large gains from test-time training, multi-view inference, and ensemble selection. In the reported chain, single-view no-TTT performance around 35.9\% grows to about 49.8\% with multi-view plus TTT, then to about 54.5\% at pass@2, and to about 60.4\% in the final ensemble.
+
+For the repo-wide synthesis, VARC is important for two reasons. First, it shows that better inductive bias can matter as much as, or more than, raw parameter count for ARC. Second, it clarifies why multi-view and candidate-selection strategies might create complementary successes without yet producing a globally human-like psychometric profile. A system can have the right modality prior for some tasks and still place its wins on a different slice of the task distribution than humans do.
+
+\subsection{McGovern and compute-limited adaptation}
+
+McGovern's study is the most operationally grounded of the set because it asks what survives under ARC Prize style compute limits. The gap it highlights is severe: competition-time fine-tuning is roughly a 1/32 compute regime compared with unconstrained pretraining. A pretrained TRM fine-tuned for 12,500 steps reaches about 6.67\% on the semi-private tasks versus about 10\% for the fully pretrained version. That is a gap, but not a total collapse. The practical lesson is that pretraining plus limited adaptation can still be meaningful under strict budget.
+
+The paper's most informative negative result is that fine-tuning only task embeddings while freezing the trunk yields near-zero performance. This cuts against a simple story in which the task token contains a soft executable program while the backbone merely interprets it. Instead, useful adaptation appears to require broader network updates. This again harmonizes with the internal repo picture: ARC-solving burden is not obviously localized in one tiny module. It appears distributed across the system's update dynamics and representational machinery.
+
+\subsection{How the literature and repo evidence fit together}
+
+The external literature and the internal empirical analyses fit together better than they might initially seem to. The complexity line says that final solver structure is especially explanatory for LLM difficulty. The human line says that human burden is more duration- and interaction-sensitive. The non-LLM line says that current structured solvers add complementary signal without yet matching the human profile broadly. The architecture papers say that strong priors, iterative refinement, and test-time candidate selection are the load-bearing mechanisms in current small-model ARC progress.
+
+Taken together, those two bodies of evidence suggest a disciplined mechanistic interpretation. ARC seems to contain a shared abstraction burden plus source-specific execution burden. For current LLM-like systems, that burden is revealed strongly by the structure of a final successful solver. For humans, that solver structure only partly captures the burden because humans are also paying search, interaction, and pair-specific costs. For current non-LLM systems, the architecture papers imply that the important ingredients may already be present, but the psychometric comparisons suggest those ingredients have not yet produced broad human-like item ordering on the current overlap.
+
+\subsection{What this section licenses and what it does not}
+
+This external synthesis licenses a much stronger mechanistic hypothesis than the repo could support from psychometric tables alone: that a common loop of strong prior plus iterative refinement plus candidate selection may underlie recent small-model ARC progress. But it does not license the claim that these systems solve ARC the way humans do. The repo does not have human process traces rich enough to support that. The most responsible use of the architecture section is therefore explanatory and generative. It helps explain why the non-LLM systems may still matter despite weak human-alignment numbers, and it generates concrete next questions about invariance, iterative search, and the role of latent scratchpads or task adaptation.

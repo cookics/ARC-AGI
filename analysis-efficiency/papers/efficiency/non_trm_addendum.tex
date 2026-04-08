@@ -1,0 +1,70 @@
+\section{Non-TRM addendum}
+This addendum strips TRM out of the non-LLM story and keeps only Compress ARC and VARC. The useful efficiency proxies here are final performance, oracle candidate coverage, selection efficiency, and the pass@k progression. Because Compress ARC has one run and VARC has four, this is descriptive rather than a formal inferential comparison.
+
+\subsection{Hypotheses}
+\begin{itemize}
+\item Final performance is limited partly by selection, not only candidate generation.
+\item ARC-1 should be more selection-efficient than ARC-2.
+\item VARC gains should diminish after pass@2.
+\end{itemize}
+
+\subsection{Not pursued}
+\begin{itemize}
+\item We did not pool TRM into this addendum, because step count is not on the same scale as candidate-count or iteration proxies.
+\item We did not treat Compress ARC as inferential evidence, because it contributes only a single run.
+\item We did not force one unified non-LLM efficiency score across all subtypes, because the telemetry is structurally different across Compress ARC, VARC, and TRM.
+\end{itemize}
+
+\subsection{Summary table}
+\begin{table}[htbp]
+\centering
+\caption{Non-TRM efficiency summary.}
+\label{tab:nontrm_summary}
+\begin{tabular}{lrrrrrr}
+\toprule
+run & performance & oracle & gap & selection & pass1 & pass4 \\
+\midrule
+Compress ARC & 0.203 & 0.343 & 0.140 & 0.591 & -- & -- \\
+ARC-1\_Unet & 0.367 & 0.623 & 0.255 & 0.590 & 0.300 & 0.367 \\
+ARC-1\_ViT & 0.450 & 0.703 & 0.253 & 0.641 & 0.300 & 0.450 \\
+ARC-2\_Unet & 0.033 & 0.092 & 0.058 & 0.364 & 0.017 & 0.033 \\
+ARC-2\_ViT & 0.042 & 0.125 & 0.083 & 0.333 & 0.025 & 0.042 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{ARC-1 versus ARC-2 within VARC}
+Because VARC has two ARC-1 and two ARC-2 runs, we can do an exact two-group permutation check on the split effect. This is still descriptive in spirit, but it gives a clean sanity check for whether ARC-1 is systematically easier to exploit.
+
+\begin{table}[htbp]
+\centering
+\caption{Exact split comparison for the VARC runs.}
+\label{tab:varc_split}
+\begin{tabular}{lrrrr}
+\toprule
+metric & ARC-1 mean & ARC-2 mean & difference & exact p \\
+\midrule
+performance\_rate & 0.409 & 0.037 & 0.371 & 0.3333 \\
+oracle\_rate & 0.663 & 0.108 & 0.554 & 0.3333 \\
+selection\_efficiency & 0.615 & 0.348 & 0.267 & 0.3333 \\
+pass\_gain\_1\_to\_4 & 0.109 & 0.017 & 0.092 & 0.3333 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Takeaway}
+The main pattern is that oracle coverage is consistently larger than final performance, which points to selection as an important bottleneck. Compress ARC and ARC-1 Unet sit around 0.59 selection efficiency, ARC-1 ViT is a bit better at about 0.64, and ARC-2 drops to roughly 0.33--0.36. That makes the ARC-2 VARC runs look less like a search-depth problem and more like a harder candidate-ranking problem.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.96\linewidth]{figures/nontrm_ceiling_and_selection.png}
+\caption{Non-TRM candidate-ceiling view. Left: final performance versus oracle candidate coverage. Right: selection efficiency, defined as final performance divided by oracle rate.}
+\label{fig:nontrm_ceiling}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.86\linewidth]{figures/nontrm_varc_pass_curves.png}
+\caption{VARC pass@k curves. Gains are front-loaded and flatten quickly, especially on ARC-2.}
+\label{fig:nontrm_passk}
+\end{figure}

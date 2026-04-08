@@ -1,0 +1,68 @@
+\section{LLM Psychometrics}
+
+\subsection{Goal}
+
+The goal of the LLM psychometric line was to answer a basic measurement question before doing any human comparison at all: does ARC behave like a coherent test on frontier models, or is it too noisy and idiosyncratic to support stronger interpretation? A second goal was to check whether the ARC result was benchmark-specific or whether it looked like one local slice of a broader benchmark manifold.
+
+\subsection{Data}
+
+The main LLM matrix contains 24 frontier models evaluated on ARC-AGI-1 and ARC-AGI-2 public evaluation. After removing zero-variance ARC-AGI-1 tasks, the main psychometric analysis retains 372 informative ARC-1 items. ARC-AGI-2 public evaluation contributes a second, much harder benchmark slice with 120 tasks. The models span multiple vendors and include both standard and thinking-style variants.
+
+The external benchmark addendum contributes a second data object: a 203-model, 13-benchmark matrix used to test whether the ARC structure is local or part of a broader general capability signal.
+
+\subsection{Methods}
+
+The scoring rule is exact-match at the task level: a task counts as correct only if all test pairs are solved. The main methods are principal component analysis, Rasch-style latent-difficulty estimation, Loevinger's $H$ for cumulative scale structure, and matrix-preserving permutation tests. The permutation step is important because the stored model outputs behave as deterministic rather than stochastic test takers. The export-package extension adds held-out benchmark prediction and factor-model sweeps on the larger 203-model benchmark matrix.
+
+\subsection{Experiment}
+
+The LLM workstream ran four closely linked experiments.
+
+First, it asked whether ARC produces a clean ordered response matrix across frontier models. Second, it asked whether a dominant latent factor explains most of the benchmark variance. Third, it asked whether thinking and standard models occupy the same underlying dimension or different ones. Fourth, it asked whether the ARC result survives when placed inside a wider benchmark world rather than treated as a special-case phenomenon.
+
+\subsection{Results}
+
+The first result is that ARC looks unusually orderly on the LLM side. The leaderboard is highly stratified, the response matrix has a strong staircase structure, and Loevinger's scalability coefficient reaches $H = 0.779$. The second result is that one large factor dominates the response structure: PC1 explains 48.7\% of variance while PC2 explains 8.8\%. The third result is that thinking-style models mostly move along the same latent dimension rather than opening a clearly orthogonal regime. The fourth result is that the broader benchmark addendum points in the same direction: the first principal component explains 66.4\% of variance across the 203-model, 13-benchmark matrix, and held-out benchmark prediction achieves mean $R^2 = 0.615$.
+
+Taken together, these findings make ARC psychometrically usable on the model side. They do not prove perfect unidimensionality, but they do show that the benchmark is structured enough for later human-alignment and solver-complexity comparisons to mean something.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Compact summary of the main LLM psychometric findings used in the master paper.}
+\begin{tabular}{p{3.0in}p{1.6in}}
+\toprule
+\textbf{Quantity} & \textbf{Value} \\
+\midrule
+Best ARC-AGI-1 public-eval accuracy & 96.0\% \\
+Best ARC-AGI-2 public-eval accuracy & 32.5\% \\
+Loevinger's $H$ on ARC-AGI-1 & 0.779 \\
+ARC-AGI-1 PC1 variance explained & 48.7\% \\
+ARC-AGI-1 PC2 variance explained & 8.8\% \\
+Broader benchmark PC1 variance explained & 66.4\% \\
+Held-out benchmark prediction mean $R^2$ & 0.615 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig1_leaderboard.png}
+    \caption{ARC-AGI leaderboard view from the LLM psychometric package. ARC-AGI-2 is not merely a small upward shift from ARC-AGI-1; it is dramatically harder even for the strongest models.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{fig2_response_matrix_v1.png}
+    \caption{ARC-AGI-1 response matrix sorted by model score and task pass rate. The staircase pattern is the visual signature of a cumulative difficulty structure rather than a patchwork of unrelated wins.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{fig3_scree_plot.png}
+    \caption{Scree plot for the main ARC-AGI-1 model-by-task matrix. The large PC1-to-PC2 gap is the core reason the repository treats ARC as strongly one-factor dominated on the LLM side.}
+\end{figure}
+
+\subsection{Why this section matters for the rest of the paper}
+
+The main contribution of the LLM psychometric line is not just that it supplies a leaderboard. It establishes the baseline against which the rest of the repository is interpreted. Human alignment matters because the model-side benchmark is not psychometrically chaotic. Solver-complexity correlations matter because LLM difficulty is stable across multiple difficulty constructions. Non-LLM comparisons matter because the benchmark already has a visible machine-side backbone, so failure to align with humans cannot be blamed on ARC itself being structureless.

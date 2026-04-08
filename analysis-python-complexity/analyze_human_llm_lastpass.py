@@ -472,7 +472,10 @@ def write_mini_paper(
         ]
     )
 
-    (BASE_DIR / "mini_paper_closeness_human_llm.md").write_text("\n".join(lines), encoding="utf-8")
+    (BASE_DIR / "papers" / "briefs" / "mini_paper_closeness_human_llm.md").write_text(
+        "\n".join(lines),
+        encoding="utf-8",
+    )
 
 
 def main() -> None:

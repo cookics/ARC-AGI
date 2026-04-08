@@ -15,7 +15,9 @@ from statsmodels.stats.multitest import multipletests
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 BASE_DIR = Path(__file__).resolve().parent
-HUMAN_TABLE_PATH = ROOT_DIR / "analysis-human" / "analysis" / "tables" / "public_eval_human_vs_models.csv"
+HUMAN_TABLE_PATH = (
+    ROOT_DIR / "analysis-human" / "papers" / "human-testing" / "tables" / "public_eval_human_vs_models.csv"
+)
 
 APPROVED_LLM_PATH = BASE_DIR / "approved_llm_complexity_join.csv"
 MODEL_META_PATH = BASE_DIR / "llm_model_metadata.csv"

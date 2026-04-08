@@ -1,0 +1,51 @@
+\section{Human Psychometrics}
+
+\subsection{Goal}
+
+The goal of the human workstream was to establish whether the sparse ARC human dataset is good enough to serve as a benchmark at all, and if so, what kind of benchmark it is. A second goal was to calibrate how much agreement we should expect between humans and models given the dataset's own internal noise.
+
+\subsection{Data}
+
+The human attempt log contains 4,681 attempts across 509 sessions, 442 observed task IDs, and 502 task-pair rows. Coverage is sparse and opportunistic rather than exam-like: only 40.4\% of ARC-AGI-2 public task pairs appear in the observed table, and the implied session-by-item matrix density is about 1.83\%. Public Train is easier than Public Eval, but Public Eval is the main overlap region for cross-system comparison.
+
+\subsection{Methods}
+
+The human pipeline combines descriptive solve-rate summaries with person-plus-item logistic modeling, split-half simulation, and later latent task estimation in the cross-ARC package. The key methodological move is to treat split-half human-versus-human correlations as the reference distribution for how large any human-versus-model correlation can realistically be on this sparse benchmark. This keeps later model comparisons from being judged against an unrealistic ceiling.
+
+\subsection{Experiment}
+
+The human line effectively ran three experiments. First, it tested whether the sparse human matrix still supports meaningful psychometric estimation. Second, it measured human split-half reproducibility on the public-eval overlap used for cross-system comparison. Third, it compared human item difficulty to several model-side profiles: the average model, the best single model, and a per-pair oracle profile.
+
+\subsection{Results}
+
+The basic result is that the human benchmark is noisy but usable. The held-in diagnostics for the person-plus-item model are strong enough to support latent estimation, and the cross-ARC package later shows that latent task scores are more stable than raw task means. On the public-eval overlap, the human split-half median Pearson correlation is about 0.399. Human versus average-model correlation is about 0.402, which lands near the center of the human split-half distribution. Human versus best single model is lower, around 0.276, and human versus per-pair oracle sits in between, around 0.343.
+
+This leads to a balanced reading. The strongest version of ``models are random with respect to humans'' is not supported, because the average-model profile clearly aligns with human item difficulty. But the strongest version of ``leaderboard success means human-like ordering'' is also not supported, because even a strong single model does not line up with humans as well as one split-half of humans lines up with the other.
+
+The human side also has its own distinctive burden signature. Human difficulty is much more associated with duration than with raw board size, and within-task pair-level heterogeneity is substantial. These features become crucial later when the paper asks why solver complexity predicts LLM difficulty more strongly than human difficulty.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Human-versus-model alignment in the public-eval overlap, benchmarked against human split-half reliability.}
+\begin{tabular}{p{2.6in}p{1.0in}p{1.2in}}
+\toprule
+\textbf{Series} & \textbf{Pearson $r$} & \textbf{Percentile vs split-half} \\
+\midrule
+Human split-half median & 0.399 & 0.500 \\
+Human vs average model & 0.402 & 0.523 \\
+Human vs best single model & 0.276 & 0.023 \\
+Human vs per-pair oracle & 0.343 & 0.179 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{human_split_half_stability.png}
+    \caption{Raw solve rates versus latent task estimates under split-half resampling in the cross-ARC package. The main point is that latent task estimates are more stable than naive raw means in every benchmark slice.}
+\end{figure}
+
+\subsection{Why this section matters for the rest of the paper}
+
+The human workstream is what forces the paper to distinguish shared difficulty from shared burden. Without it, ARC could be narrated as a clean machine psychometric instrument. With it, the paper has to deal with sparse exposure, moderate reliability, duration, and pair-level heterogeneity. Those are not side issues; they are the empirical reasons the full manuscript ends up arguing that humans and models overlap on one difficulty axis while diverging on what makes a task burdensome.

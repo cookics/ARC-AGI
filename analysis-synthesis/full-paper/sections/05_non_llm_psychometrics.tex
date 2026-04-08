@@ -1,0 +1,63 @@
+\section{Non-LLM Psychometrics}
+
+\subsection{Goal}
+
+The goal of the non-LLM workstream was not just to collect alternative ARC scores. It was to ask a sharper question: once we add bona fide non-LLM systems to the repo, do they look more human-like than the LLM aggregate, less human-like, or simply different in a complementary way?
+
+\subsection{Data}
+
+The main comparison space is ARC-AGI-2 Public Eval because that is where the human attempt data and stored prediction corpora overlap cleanly. The primary subset contains 110 public-eval test pairs with at least 8 human attempts each. The main non-LLM sources are TRM ARC-AGI-II evaluator submissions and VARC ARC-2 prediction dumps. CompressARC contributes an ARC-1 sidecar rather than a direct ARC-2 comparison.
+
+\subsection{Methods}
+
+The non-LLM section uses more than one null because low-score binary systems are easy to misread. It benchmarks systems against the human split-half distribution, reruns the analysis at several human-attempt thresholds, tests fixed-accuracy random-placement nulls, controls for simple task features, compares against accuracy-matched weak LLMs, and checks for residual signal after controlling the LLM average. It also looks for complementarity by asking whether non-LLM systems rescue human-easy and LLM-hard items above chance.
+
+\subsection{Experiment}
+
+The core experiment compares several selected profiles on the same ARC-2 human-overlap subset: the LLM average, the best-aligned single LLM, the best-score single LLM, a mid-training TRM checkpoint, a later higher-score TRM checkpoint, and the strongest stored VARC ARC-2 profile. The follow-up experiments then ask whether low raw correlations are better than score-matched random placement, whether any residual human-like structure survives simple controls, and whether TRM training improves human-likeness or only score.
+
+\subsection{Results}
+
+The top line is disappointing but clear. The LLM average reaches a human-correlation value around 0.402 on the primary 110-pair subset, while the best-aligned single LLM reaches about 0.439. The most human-aligned TRM checkpoint reaches only about 0.214, and the best VARC profile about 0.158. Human-equivalence is not rejected for the LLM average or the best-aligned LLM, but it is rejected for the leading non-LLM profiles.
+
+At the same time, raw correlation is not the whole story. The mid-training TRM checkpoint exceeds the same-accuracy random-placement null, whereas the later best-score TRM checkpoint does not. TRM and VARC also rescue a handful of human-easy and LLM-hard items, and the TRM plus VARC union rescues 6 such items above chance. So the non-LLM systems are not useless or redundant; they are simply weaker than hoped as broad human-profile matches.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Headline ARC-2 results for selected LLM and non-LLM profiles on the 110-pair primary subset.}
+\begin{tabular}{p{2.45in}p{0.8in}p{0.9in}p{0.8in}}
+\toprule
+\textbf{Profile} & \textbf{Pair Acc.} & \textbf{Human $r$} & \textbf{H1 $p$} \\
+\midrule
+LLM average & 0.108 & 0.402 & 0.950 \\
+Best-aligned LLM (Claude Opus 16k) & 0.164 & 0.439 & 0.506 \\
+Best-score LLM (GPT-5-2 xhigh) & 0.491 & 0.276 & 0.052 \\
+TRM 361957 pass@2 & 0.045 & 0.214 & 0.004 \\
+TRM 651522 pass@2 & 0.109 & 0.113 & 0.0004 \\
+VARC ARC-2 ViT pass@2 & 0.036 & 0.158 & 0.0004 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig09_alignment_band.png}
+    \caption{Selected ARC-2 system profiles against the human split-half benchmark. The visual point is simple: the LLM aggregate sits inside the human split-half band, while the current non-LLM systems do not.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig10_fixed_accuracy_null.png}
+    \caption{Observed human-alignment against the fixed-accuracy random-placement null. This is the key correction for score sparsity: low raw correlation can still be meaningful if it beats what random placement at the same number of wins would produce.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{fig07_trm_trajectory.png}
+    \caption{TRM training dynamics on the human-overlap subset. Score rises over training, but human-alignment peaks earlier and does not improve in lockstep.}
+\end{figure}
+
+\subsection{Why this section matters for the rest of the paper}
+
+This section is where the repository's most disappointing result lives, and it is important precisely because the rest of the paper depends on not hiding it. Current non-LLM systems are not the clean human-like alternative to the LLM consensus on the available psychometric evidence. But they are also not vacuous. They contribute complementary successes, they separate benchmark score from human-like item placement, and they set up the architectural question explored later in the paper: why do these systems seem mechanistically promising even while their current human-alignment numbers remain modest?

@@ -16,7 +16,7 @@ This repository contains scripts for analyzing the dimensionality, difficulty, a
 **Building the Paper:**
 To regenerate the main figures and tables, run the scripts from this folder or from the repo root. The scripts now read canonical ARC task and prediction data from `data-llm/`.
 
-To compile the psychometrics manuscript natively, run the following command from `papers-arc-psychometrics/`:
+To compile the psychometrics manuscript natively, run the following command from `analysis-llm-psychometrics/papers/arc-psychometrics/`:
 ```powershell
 latexmk -pdf paper.tex
 ```

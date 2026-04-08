@@ -1,0 +1,69 @@
+\section{Cross-ARC Linkage and Efficiency}
+
+\subsection{Goal}
+
+The goal of the cross-ARC and efficiency workstreams was to widen the context around the tiny fully matched overlap. Cross-ARC asks whether sparse human task estimates can be stabilized and linked across ARC-AGI-1 and ARC-AGI-2 without pretending the benchmarks are identical. Efficiency asks whether score, duration, cost, and effort tell a consistent story across humans, LLMs, and non-LLM systems.
+
+\subsection{Data}
+
+The cross-ARC package constructs three benchmark slices: an ARC-1 sidecar with 230 human-covered tasks, an ARC-2 eval slice with 115 matched human and LLM tasks, and an ARC-2 train-other slice with 97 tasks. The efficiency package aggregates 29 LLM model runs, 509 human sessions, 15 non-LLM rows, and 115 shared ARC-2 tasks for direct cross-source task-level comparison.
+
+\subsection{Methods}
+
+Cross-ARC uses latent task estimation, split-half stability comparisons, benchmark metadata, and common-model linkage between ARC-1 and ARC-2. Efficiency uses source-family rollups, task-level cross-source correlations, within-source efficiency gradients, cross-validated predictive models, and shared-task PCA. The common methodological idea is to widen the interpretive field without pretending that every source family lives on one perfectly commensurate scale.
+
+\subsection{Experiment}
+
+The cross-ARC line first asks whether latent task estimates are more stable than raw solve rates under sparse human coverage. It then asks how strongly human and LLM difficulty align on the widened ARC-1 and ARC-2 slices, and whether the main solver-structure asymmetry survives that wider linkage. The efficiency line then asks whether shared-task score alignment is accompanied by effort alignment, and whether simple geometry plus machine-side features can predict human outcomes.
+
+\subsection{Results}
+
+The first cross-ARC result is methodological but important: latent task estimates are more stable than raw solve rates in every benchmark slice. The latent-minus-raw gain is about 0.064 in the ARC-1 sidecar, about 0.068 in ARC-2 eval, and about 0.087 in ARC-2 train-other. The second result is that widened human-versus-LLM alignment is real but moderate: latent human difficulty correlates with LLM difficulty around $r = 0.309$ in ARC-1 sidecar and around $r = 0.355$ in ARC-2 eval.
+
+The third result is that the main structure asymmetry still appears when the overlap is widened. On the direct ARC-2 eval revisit, cyclomatic complexity correlates about $r = 0.188$ with human difficulty and about $r = 0.600$ with LLM difficulty. That is directionally the same result as the main complexity paper, not a contradiction of it.
+
+The efficiency package then adds a different kind of evidence. On the 115 shared ARC-2 tasks, human solve rate versus LLM mean score is about 0.440 Pearson and 0.428 Spearman. Human solve rate versus TRM best task score is near zero. Within source families, LLM performance rises strongly with thinking rank and duration, while human performance rises strongly with latent ability and falls with mean duration. The best cross-validated model for human solve rate is a geometry-plus-LLM-performance model, but human duration remains poorly predicted. That is a concise way of saying that score alignment is clearer than effort alignment.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Selected cross-ARC and efficiency quantities used in the integrated interpretation.}
+\begin{tabular}{p{3.35in}p{1.5in}}
+\toprule
+\textbf{Quantity} & \textbf{Value} \\
+\midrule
+ARC-1 sidecar matched human/LLM tasks & 230 \\
+ARC-2 eval matched human/LLM tasks & 115 \\
+ARC-1 sidecar latent vs LLM difficulty & $r = 0.309$ \\
+ARC-2 eval latent vs LLM difficulty & $r = 0.355$ \\
+ARC-2 direct-overlap cyclomatic vs human difficulty & $r = 0.188$ \\
+ARC-2 direct-overlap cyclomatic vs LLM difficulty & $r = 0.600$ \\
+Shared-task human solve rate vs LLM mean score & Pearson $= 0.440$ \\
+Shared-task human solve rate vs TRM best score & Pearson $= 0.071$ \\
+LLM performance vs thinking rank & Spearman $= 0.805$ \\
+Human performance vs ability & Spearman $= 0.873$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{human_llm_alignment.png}
+    \caption{Cross-ARC human-versus-LLM alignment view. The widened ARC-1 and ARC-2 matches preserve the same basic story as the smaller direct overlaps: shared structure is real, but not complete.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.82\textwidth]{solver_structure_cyclomatic.png}
+    \caption{Cross-ARC solver-structure revisit. Even on the widened revisit slice, cyclomatic complexity tracks LLM difficulty much more strongly than human difficulty.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{source_tradeoff.png}
+    \caption{Efficiency tradeoff view across source families. LLM gains are tied strongly to additional thinking and runtime; human performance varies much more with latent ability than with a machine-like cost signal.}
+\end{figure}
+
+\subsection{Why this section matters for the rest of the paper}
+
+These packages do not replace the main complexity result; they widen and stress-test it. Cross-ARC shows that the sparse human data become more stable under latent estimation and that the shared human-versus-LLM axis survives beyond the tiny fully matched slice. Efficiency shows that score alignment does not imply common effort structure. Together they make the repo's final thesis harder to dismiss as a quirk of one tiny overlap table.

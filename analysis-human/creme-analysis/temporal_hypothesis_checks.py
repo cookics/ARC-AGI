@@ -307,7 +307,7 @@ def write_main_analysis_note(trend_stats: dict, deltas: pd.DataFrame) -> None:
         f"- We do not have `Opus 4` locally, so there is no direct `Opus 4 -> 4.5` time test. What we can say is that `Opus 4.5` already looks quite human-aligned by `16k` and stays that way at `64k` ({opus['old_human_corr']:.3f} -> {opus['new_human_corr']:.3f}) while accuracy rises a lot.",
         "- One interesting exception: `Opus 4.5` can look more human-aligned than much higher-scoring GPT settings, so better raw score and more human-like item ordering are related but not identical.",
         "",
-        "I kept the fuller writeup and figure in `Human data/Creme Analysis/temporal_hypotheses.md` and `fig02_family_progressions.png` because that frame is closer to the original Cremieux-style question.",
+        "I kept the fuller writeup and figure in `analysis-human/creme-analysis/temporal_hypotheses.md` and `fig02_family_progressions.png` because that frame is closer to the original Cremieux-style question.",
         "",
     ]
 
