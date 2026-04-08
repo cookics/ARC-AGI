@@ -20,9 +20,9 @@ The core experiment compares several selected profiles on the same ARC-2 human-o
 
 The top line is disappointing but clear. The LLM average reaches a human-correlation value around 0.402 on the primary 110-pair subset, while the best-aligned single LLM reaches about 0.439. The most human-aligned TRM checkpoint reaches only about 0.214, and the best VARC profile about 0.158. Human-equivalence is not rejected for the LLM average or the best-aligned LLM, but it is rejected for the leading non-LLM profiles.
 
-At the same time, raw correlation is not the whole story. The mid-training TRM checkpoint exceeds the same-accuracy random-placement null, whereas the later best-score TRM checkpoint does not. TRM and VARC also rescue a handful of human-easy and LLM-hard items, and the TRM plus VARC union rescues 6 such items above chance. So the non-LLM systems are not useless or redundant; they are simply weaker than hoped as broad human-profile matches.
+At the same time, raw correlation is not the whole story. The threshold-sensitivity table shows that the ordering is stable as the human-attempt filter tightens: the LLM aggregate and the best-aligned single LLM improve steadily, while TRM and VARC remain well below them. The mid-training TRM checkpoint exceeds the same-accuracy random-placement null, whereas the later best-score TRM checkpoint does not. TRM and VARC also rescue a handful of human-easy and LLM-hard items, and the TRM plus VARC union rescues 6 such items above chance. So the non-LLM systems are not useless or redundant; they are simply weaker than hoped as broad human-profile matches.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \small
 \caption{Headline ARC-2 results for selected LLM and non-LLM profiles on the 110-pair primary subset.}
@@ -40,6 +40,43 @@ VARC ARC-2 ViT pass@2 & 0.036 & 0.158 & 0.0004 \\
 \end{tabular}
 \end{table}
 
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Threshold sensitivity on the ARC-2 public-eval overlap. Tightening the human-attempt filter changes the absolute values but not the broad ordering.}
+\begin{tabular}{p{0.55in}p{0.55in}p{0.62in}p{0.62in}p{0.62in}p{0.62in}p{0.62in}p{0.62in}}
+\toprule
+\textbf{Min attempts} & \textbf{$n$ pairs} & \textbf{LLM avg} & \textbf{Opus 16k} & \textbf{GPT-5.2 xh} & \textbf{TRM 361957} & \textbf{TRM 651522} & \textbf{VARC ViT} \\
+\midrule
+2 & 161 & 0.345 & 0.348 & 0.256 & 0.164 & 0.090 & 0.091 \\
+3 & 159 & 0.351 & 0.362 & 0.242 & 0.171 & 0.098 & 0.096 \\
+5 & 129 & 0.367 & 0.403 & 0.231 & 0.199 & 0.095 & 0.142 \\
+8 & 110 & 0.402 & 0.439 & 0.276 & 0.214 & 0.113 & 0.158 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Complementary rescue of human-easy and LLM-hard pairs. This is the compact reason the paper keeps a non-redundancy claim even while rejecting strong human-equivalence claims.}
+\begin{tabular}{p{2.2in}p{0.8in}p{0.8in}p{0.9in}p{0.8in}}
+\toprule
+\textbf{System} & \textbf{Solved items} & \textbf{Rescued pairs} & \textbf{Random expectation} & \textbf{$p$} \\
+\midrule
+TRM 651522 pass@2 & 12 & 5 & 2.4 & 0.061 \\
+VARC ARC-2 ViT pass@2 & 4 & 3 & 0.8 & 0.025 \\
+TRM + VARC union & 13 & 6 & 2.6 & 0.022 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig02_threshold_sensitivity.png}
+    \caption{Threshold-sensitivity figure from the non-LLM package. The ranking is stable enough that the paper can treat the disappointing non-LLM result as robust rather than a threshold artifact.}
+\end{figure}
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.92\textwidth]{fig09_alignment_band.png}
@@ -56,6 +93,12 @@ VARC ARC-2 ViT pass@2 & 0.036 & 0.158 & 0.0004 \\
     \centering
     \includegraphics[width=0.96\textwidth]{fig07_trm_trajectory.png}
     \caption{TRM training dynamics on the human-overlap subset. Score rises over training, but human-alignment peaks earlier and does not improve in lockstep.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig11_residual_signal.png}
+    \caption{Residual-signal view from the non-LLM package. The point is not that non-LLM systems broadly match humans, but that they retain some structure that is not exhausted by the LLM average.}
 \end{figure}
 
 \subsection{Why this section matters for the rest of the paper}

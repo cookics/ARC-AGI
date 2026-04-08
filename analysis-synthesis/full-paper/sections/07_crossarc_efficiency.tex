@@ -24,24 +24,51 @@ The third result is that the main structure asymmetry still appears when the ove
 
 The efficiency package then adds a different kind of evidence. On the 115 shared ARC-2 tasks, human solve rate versus LLM mean score is about 0.440 Pearson and 0.428 Spearman. Human solve rate versus TRM best task score is near zero. Within source families, LLM performance rises strongly with thinking rank and duration, while human performance rises strongly with latent ability and falls with mean duration. The best cross-validated model for human solve rate is a geometry-plus-LLM-performance model, but human duration remains poorly predicted. That is a concise way of saying that score alignment is clearer than effort alignment.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \small
-\caption{Selected cross-ARC and efficiency quantities used in the integrated interpretation.}
-\begin{tabular}{p{3.35in}p{1.5in}}
+\caption{Widened human-versus-LLM alignment across the cross-ARC slices. The latent column is the one the paper treats as primary, but the raw and PC1 columns show that the effect is not an artifact of one estimator.}
+\begin{tabular}{p{1.2in}p{0.8in}p{1.0in}p{1.0in}p{1.0in}}
 \toprule
-\textbf{Quantity} & \textbf{Value} \\
+\textbf{Slice} & \textbf{$n$ tasks} & \textbf{Raw solve vs LLM} & \textbf{Latent vs LLM} & \textbf{PC1 vs LLM} \\
 \midrule
-ARC-1 sidecar matched human/LLM tasks & 230 \\
-ARC-2 eval matched human/LLM tasks & 115 \\
-ARC-1 sidecar latent vs LLM difficulty & $r = 0.309$ \\
-ARC-2 eval latent vs LLM difficulty & $r = 0.355$ \\
-ARC-2 direct-overlap cyclomatic vs human difficulty & $r = 0.188$ \\
-ARC-2 direct-overlap cyclomatic vs LLM difficulty & $r = 0.600$ \\
-Shared-task human solve rate vs LLM mean score & Pearson $= 0.440$ \\
-Shared-task human solve rate vs TRM best score & Pearson $= 0.071$ \\
-LLM performance vs thinking rank & Spearman $= 0.805$ \\
-Human performance vs ability & Spearman $= 0.873$ \\
+ARC-1 sidecar & 230 & 0.297 & 0.309 & 0.362 \\
+ARC-2 eval & 115 & 0.368 & 0.355 & 0.341 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Direct-overlap structure deltas in the widened revisit. Even on the small revisit slice, the same asymmetry reappears: solver structure is more LLM-linked than human-linked.}
+\begin{tabular}{p{1.8in}p{0.6in}p{0.8in}p{0.8in}p{0.8in}}
+\toprule
+\textbf{Predictor} & \textbf{$n$} & \textbf{Human $r$} & \textbf{LLM $r$} & \textbf{$\Delta$} \\
+\midrule
+Cyclomatic complexity & 19 & 0.188 & 0.600 & 0.412 \\
+Structure PC1 & 19 & 0.173 & 0.552 & 0.378 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Selected efficiency correlations. The table is organized to show within-source gradients first and shared-task cross-source gradients second.}
+\begin{tabular}{p{2.6in}p{0.45in}p{0.7in}p{0.7in}}
+\toprule
+\textbf{Analysis} & \textbf{$n$} & \textbf{Pearson} & \textbf{Spearman} \\
+\midrule
+LLM performance vs thinking rank & 22 & 0.749 & 0.805 \\
+Human performance vs ability & 509 & 0.878 & 0.873 \\
+Human performance vs duration & 509 & -0.280 & -0.338 \\
+Shared-task human vs LLM score & 115 & 0.440 & 0.428 \\
+Shared-task human vs LLM duration & 115 & -0.284 & -0.332 \\
+Shared-task human vs LLM cost & 115 & -0.311 & -0.357 \\
+Shared-task human vs TRM score & 115 & 0.071 & 0.055 \\
+Public-eval human vs average model & 110 & 0.402 & 0.454 \\
+Public-eval human vs best single model & 110 & 0.276 & 0.276 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -56,6 +83,18 @@ Human performance vs ability & Spearman $= 0.873$ \\
     \centering
     \includegraphics[width=0.82\textwidth]{solver_structure_cyclomatic.png}
     \caption{Cross-ARC solver-structure revisit. Even on the widened revisit slice, cyclomatic complexity tracks LLM difficulty much more strongly than human difficulty.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.94\textwidth]{shared_task_latent_map.png}
+    \caption{Shared-task latent map from the efficiency package. This view is useful because it ties the cross-ARC linkage work back to the concrete 115-task overlap used for score and effort comparisons.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{task_correlation_heatmap.png}
+    \caption{Task-correlation heatmap across shared-task metrics. The main pattern is that score-like variables cluster together more clearly than effort-like variables do across source families.}
 \end{figure}
 
 \begin{figure}[H]

@@ -13,7 +13,7 @@
 \usepackage{xcolor}
 \usepackage[numbers,sort&compress]{natbib}
 \definecolor{darkslate}{HTML}{2C3E50}
-\graphicspath{{../../../analysis-llm-psychometrics/figures/}{../../../analysis-non-llm/papers/psychometric/figures/}{../../../analysis-latent-crossarc/figures/}{../../../analysis-efficiency/papers/efficiency/figures/}{../../../analysis-python-complexity/}}
+\graphicspath{{../../../analysis-llm-psychometrics/figures/}{../../../analysis-human/papers/human-testing/figures/}{../../../analysis-human/creme-analysis/figures/}{../../../analysis-non-llm/papers/psychometric/figures/}{../../../analysis-latent-crossarc/figures/}{../../../analysis-efficiency/papers/efficiency/figures/}{../../../analysis-python-complexity/}}
 \hypersetup{colorlinks=true,linkcolor=darkslate,citecolor=darkslate,urlcolor=darkslate}
 
 \title{\textbf{Shared Difficulty, Different Burdens: A Unified Analysis of Humans, LLMs, Non-LLM Systems, Solver Complexity, and Cross-Benchmark Structure in ARC}}
@@ -141,11 +141,33 @@ First, it asked whether ARC produces a clean ordered response matrix across fron
 
 \subsection{Results}
 
-The first result is that ARC looks unusually orderly on the LLM side. The leaderboard is highly stratified, the response matrix has a strong staircase structure, and Loevinger's scalability coefficient reaches $H = 0.779$. The second result is that one large factor dominates the response structure: PC1 explains 48.7\% of variance while PC2 explains 8.8\%. The third result is that thinking-style models mostly move along the same latent dimension rather than opening a clearly orthogonal regime. The fourth result is that the broader benchmark addendum points in the same direction: the first principal component explains 66.4\% of variance across the 203-model, 13-benchmark matrix, and held-out benchmark prediction achieves mean $R^2 = 0.615$.
+The first result is that ARC looks unusually orderly on the LLM side. The leaderboard is highly stratified, the response matrix has a strong staircase structure, and Loevinger's scalability coefficient reaches $H = 0.779$. The top of the leaderboard is not a collection of near-ties: the best ARC-AGI-1 model reaches 96.0\% while the best ARC-AGI-2 score in the same package is still only 32.5\%, which makes the difficulty jump visible even before any latent analysis.
+
+The second result is that one large factor dominates the response structure: PC1 explains 48.7\% of variance while PC2 explains 8.8\%. The third result is that thinking-style models mostly move along the same latent dimension rather than opening a clearly orthogonal regime. The fourth result is that the broader benchmark addendum points in the same direction: the first principal component explains 66.4\% of variance across the 203-model, 13-benchmark matrix, and held-out benchmark prediction achieves mean $R^2 = 0.615$.
 
 Taken together, these findings make ARC psychometrically usable on the model side. They do not prove perfect unidimensionality, but they do show that the benchmark is structured enough for later human-alignment and solver-complexity comparisons to mean something.
 
-\begin{table}[t]
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Leaderboard excerpt from the main LLM matrix. The important point for the unified paper is not only who leads, but how sharply the ARC-AGI-2 ceiling remains below ARC-AGI-1 even for the strongest models.}
+\begin{tabular}{p{2.55in}p{0.8in}p{0.8in}p{0.8in}}
+\toprule
+\textbf{Model} & \textbf{Type} & \textbf{ARC-1} & \textbf{ARC-2} \\
+\midrule
+Gemini 3 Deep Think Preview & Thinking & 96.0\% & 32.5\% \\
+Gemini 3 Pro Preview & Thinking & 85.5\% & 17.5\% \\
+GPT-5 Pro (2025-10-06) & Thinking & 77.2\% & 8.3\% \\
+GPT-5.1 Thinking High & Thinking & 72.3\% & 8.3\% \\
+Claude Sonnet 4.5 Thinking 32k & Thinking & 69.4\% & 7.5\% \\
+GPT-5.1 Thinking Medium & Thinking & 65.3\% & 5.0\% \\
+Claude Sonnet 4.5 Thinking 16k & Thinking & 59.7\% & 4.2\% \\
+Claude Haiku 4.5 Thinking 32k & Thinking & 59.4\% & 3.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
 \centering
 \small
 \caption{Compact summary of the main LLM psychometric findings used in the master paper.}
@@ -182,6 +204,18 @@ Held-out benchmark prediction mean $R^2$ & 0.615 \\
     \caption{Scree plot for the main ARC-AGI-1 model-by-task matrix. The large PC1-to-PC2 gap is the core reason the repository treats ARC as strongly one-factor dominated on the LLM side.}
 \end{figure}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig4_cognitive_map.png}
+    \caption{Low-dimensional cognitive map of the frontier model matrix. The key visual pattern is that stronger thinking variants extend the same main axis more than they open a qualitatively separate cluster.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.88\textwidth]{fig5_ability.png}
+    \caption{Estimated model ability under the main latent-difficulty fit. This is one of the views that makes the machine-side ARC scale usable for later comparison rather than just leaderboard reporting.}
+\end{figure}
+
 \subsection{Why this section matters for the rest of the paper}
 
 The main contribution of the LLM psychometric line is not just that it supplies a leaderboard. It establishes the baseline against which the rest of the repository is interpreted. Human alignment matters because the model-side benchmark is not psychometrically chaotic. Solver-complexity correlations matter because LLM difficulty is stable across multiple difficulty constructions. Non-LLM comparisons matter because the benchmark already has a visible machine-side backbone, so failure to align with humans cannot be blamed on ARC itself being structureless.
@@ -207,32 +241,95 @@ The human line effectively ran three experiments. First, it tested whether the s
 
 \subsection{Results}
 
-The basic result is that the human benchmark is noisy but usable. The held-in diagnostics for the person-plus-item model are strong enough to support latent estimation, and the cross-ARC package later shows that latent task scores are more stable than raw task means. On the public-eval overlap, the human split-half median Pearson correlation is about 0.399. Human versus average-model correlation is about 0.402, which lands near the center of the human split-half distribution. Human versus best single model is lower, around 0.276, and human versus per-pair oracle sits in between, around 0.343.
+The basic result is that the human benchmark is noisy but usable. The held-in diagnostics for the person-plus-item model are strong enough to support latent estimation, and the cross-ARC package later shows that latent task scores are more stable than raw task means. The benchmark is sparse enough that the raw matrix itself matters: 4,681 attempts cover only 502 task-pair rows and about 40.4\% of public ARC-2 task pairs, so the paper cannot treat the human data like a complete exam matrix.
 
-This leads to a balanced reading. The strongest version of ``models are random with respect to humans'' is not supported, because the average-model profile clearly aligns with human item difficulty. But the strongest version of ``leaderboard success means human-like ordering'' is also not supported, because even a strong single model does not line up with humans as well as one split-half of humans lines up with the other.
+On the public-eval overlap, the human split-half median Pearson correlation is about 0.399. Human versus average-model correlation is about 0.402, which lands near the center of the human split-half distribution. Human versus best single model is lower, around 0.276, and human versus per-pair oracle sits in between, around 0.343. This leads to a balanced reading. The strongest version of ``models are random with respect to humans'' is not supported, because the average-model profile clearly aligns with human item difficulty. But the strongest version of ``leaderboard success means human-like ordering'' is also not supported, because even a strong single model does not line up with humans as well as one split-half of humans lines up with the other.
 
-The human side also has its own distinctive burden signature. Human difficulty is much more associated with duration than with raw board size, and within-task pair-level heterogeneity is substantial. These features become crucial later when the paper asks why solver complexity predicts LLM difficulty more strongly than human difficulty.
+The data composition tables and figures also clarify what kind of benchmark this is. Attempted items are not representative: on Public Eval, attempted items average about 425 input cells versus about 269 for unattempted items. Human burden is also distinctive. Human difficulty is much more associated with duration than with raw board size, and within-task pair-level heterogeneity is substantial. These features become crucial later when the paper asks why solver complexity predicts LLM difficulty more strongly than human difficulty.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \small
-\caption{Human-versus-model alignment in the public-eval overlap, benchmarked against human split-half reliability.}
-\begin{tabular}{p{2.6in}p{1.0in}p{1.2in}}
+\caption{Human benchmark snapshot from the unified attempt log. These values are the reason later sections lean on latent estimation and split-half benchmarking instead of treating raw human means as fully settled.}
+\begin{tabular}{p{3.2in}p{1.5in}}
 \toprule
-\textbf{Series} & \textbf{Pearson $r$} & \textbf{Percentile vs split-half} \\
+\textbf{Quantity} & \textbf{Value} \\
 \midrule
-Human split-half median & 0.399 & 0.500 \\
-Human vs average model & 0.402 & 0.523 \\
-Human vs best single model & 0.276 & 0.023 \\
-Human vs per-pair oracle & 0.343 & 0.179 \\
+Attempts & 4,681 \\
+Sessions & 509 \\
+Observed task IDs & 442 \\
+Observed task-pair rows & 502 \\
+Task-pair coverage of all observed ARC pairs & 40.4\% \\
+Implied session-by-item matrix density & 1.83\% \\
+Overall solve rate & 75.3\% \\
+Public Train solve rate & 80.4\% \\
+Public Eval solve rate & 61.3\% \\
+Median attempts per session & 8 \\
+Median attempts per item & 9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Sampling-bias summary from the human-testing package. Attempted items are consistently larger than unattempted items, especially on Public Eval.}
+\begin{tabular}{p{1.0in}p{0.9in}p{0.55in}p{0.8in}p{0.8in}p{0.8in}}
+\toprule
+\textbf{Task set} & \textbf{Status} & \textbf{$n$} & \textbf{Mean input cells} & \textbf{Mean colors} & \textbf{Mean train pairs} \\
+\midrule
+Public Eval & Unattempted & 5 & 269.2 & 6.30 & 3.60 \\
+Public Eval & Attempted & 115 & 424.8 & 5.45 & 2.97 \\
+Public Train & Unattempted & 674 & 145.9 & 3.75 & 3.23 \\
+Public Train & Attempted & 326 & 293.1 & 4.36 & 3.24 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Human-versus-model alignment in the public-eval overlap, benchmarked against human split-half reliability. Including the overlap-set Jaccard terms makes it clear that Pearson alone is not the only sense in which the average-model profile behaves human-like.}
+\begin{tabular}{p{1.95in}p{0.7in}p{0.7in}p{0.7in}p{0.7in}p{0.9in}}
+\toprule
+\textbf{Series} & \textbf{Pearson $r$} & \textbf{Spearman $\rho$} & \textbf{Hard Jacc.} & \textbf{Easy Jacc.} & \textbf{Percentile vs split-half} \\
+\midrule
+Human split-half median & 0.399 & 0.427 & 0.135 & 0.235 & 0.500 \\
+Human vs average model & 0.402 & 0.454 & 0.100 & 0.419 & 0.523 \\
+Human vs best single model & 0.276 & 0.276 & 0.000 & 0.257 & 0.023 \\
+Human vs per-pair oracle & 0.343 & 0.346 & 0.100 & 0.375 & 0.179 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{figure}[H]
     \centering
+    \includegraphics[width=\textwidth]{fig01_human_response_matrix.png}
+    \caption{Observed human response matrix from the human-testing package. The missingness pattern is part of the result: this is a sparse, opportunistic human benchmark rather than a cleanly administered test.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig05_sampling_bias.png}
+    \caption{Sampling-bias visualization from the human package. The paper needs this view because later cross-system claims are otherwise easy to over-read as if humans saw a representative subset.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig01_split_half_vs_models.png}
+    \caption{Split-half context against human-versus-model correlations. This is the most direct visual reason the paper treats the average-model alignment result as real but incomplete.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
     \includegraphics[width=0.92\textwidth]{human_split_half_stability.png}
     \caption{Raw solve rates versus latent task estimates under split-half resampling in the cross-ARC package. The main point is that latent task estimates are more stable than naive raw means in every benchmark slice.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig07_human_vs_lm_public_eval.png}
+    \caption{Public-eval human-versus-model comparison view from the human-testing package. The figure complements the table by showing where the average-model profile does and does not overlap the human ordering.}
 \end{figure}
 
 \subsection{Why this section matters for the rest of the paper}
@@ -262,9 +359,9 @@ The core experiment compares several selected profiles on the same ARC-2 human-o
 
 The top line is disappointing but clear. The LLM average reaches a human-correlation value around 0.402 on the primary 110-pair subset, while the best-aligned single LLM reaches about 0.439. The most human-aligned TRM checkpoint reaches only about 0.214, and the best VARC profile about 0.158. Human-equivalence is not rejected for the LLM average or the best-aligned LLM, but it is rejected for the leading non-LLM profiles.
 
-At the same time, raw correlation is not the whole story. The mid-training TRM checkpoint exceeds the same-accuracy random-placement null, whereas the later best-score TRM checkpoint does not. TRM and VARC also rescue a handful of human-easy and LLM-hard items, and the TRM plus VARC union rescues 6 such items above chance. So the non-LLM systems are not useless or redundant; they are simply weaker than hoped as broad human-profile matches.
+At the same time, raw correlation is not the whole story. The threshold-sensitivity table shows that the ordering is stable as the human-attempt filter tightens: the LLM aggregate and the best-aligned single LLM improve steadily, while TRM and VARC remain well below them. The mid-training TRM checkpoint exceeds the same-accuracy random-placement null, whereas the later best-score TRM checkpoint does not. TRM and VARC also rescue a handful of human-easy and LLM-hard items, and the TRM plus VARC union rescues 6 such items above chance. So the non-LLM systems are not useless or redundant; they are simply weaker than hoped as broad human-profile matches.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \small
 \caption{Headline ARC-2 results for selected LLM and non-LLM profiles on the 110-pair primary subset.}
@@ -282,6 +379,43 @@ VARC ARC-2 ViT pass@2 & 0.036 & 0.158 & 0.0004 \\
 \end{tabular}
 \end{table}
 
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Threshold sensitivity on the ARC-2 public-eval overlap. Tightening the human-attempt filter changes the absolute values but not the broad ordering.}
+\begin{tabular}{p{0.55in}p{0.55in}p{0.62in}p{0.62in}p{0.62in}p{0.62in}p{0.62in}p{0.62in}}
+\toprule
+\textbf{Min attempts} & \textbf{$n$ pairs} & \textbf{LLM avg} & \textbf{Opus 16k} & \textbf{GPT-5.2 xh} & \textbf{TRM 361957} & \textbf{TRM 651522} & \textbf{VARC ViT} \\
+\midrule
+2 & 161 & 0.345 & 0.348 & 0.256 & 0.164 & 0.090 & 0.091 \\
+3 & 159 & 0.351 & 0.362 & 0.242 & 0.171 & 0.098 & 0.096 \\
+5 & 129 & 0.367 & 0.403 & 0.231 & 0.199 & 0.095 & 0.142 \\
+8 & 110 & 0.402 & 0.439 & 0.276 & 0.214 & 0.113 & 0.158 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Complementary rescue of human-easy and LLM-hard pairs. This is the compact reason the paper keeps a non-redundancy claim even while rejecting strong human-equivalence claims.}
+\begin{tabular}{p{2.2in}p{0.8in}p{0.8in}p{0.9in}p{0.8in}}
+\toprule
+\textbf{System} & \textbf{Solved items} & \textbf{Rescued pairs} & \textbf{Random expectation} & \textbf{$p$} \\
+\midrule
+TRM 651522 pass@2 & 12 & 5 & 2.4 & 0.061 \\
+VARC ARC-2 ViT pass@2 & 4 & 3 & 0.8 & 0.025 \\
+TRM + VARC union & 13 & 6 & 2.6 & 0.022 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig02_threshold_sensitivity.png}
+    \caption{Threshold-sensitivity figure from the non-LLM package. The ranking is stable enough that the paper can treat the disappointing non-LLM result as robust rather than a threshold artifact.}
+\end{figure}
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.92\textwidth]{fig09_alignment_band.png}
@@ -298,6 +432,12 @@ VARC ARC-2 ViT pass@2 & 0.036 & 0.158 & 0.0004 \\
     \centering
     \includegraphics[width=0.96\textwidth]{fig07_trm_trajectory.png}
     \caption{TRM training dynamics on the human-overlap subset. Score rises over training, but human-alignment peaks earlier and does not improve in lockstep.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig11_residual_signal.png}
+    \caption{Residual-signal view from the non-LLM package. The point is not that non-LLM systems broadly match humans, but that they retain some structure that is not exhausted by the LLM average.}
 \end{figure}
 
 \subsection{Why this section matters for the rest of the paper}
@@ -329,9 +469,9 @@ The first result is that the complexity panel is structured rather than arbitrar
 
 The third result is the most important in the whole repository. Humans and LLMs do share a real common difficulty axis on the approved overlap, with human difficulty versus LLM difficulty around $r = 0.531$ and human solve rate versus average-model pass rate around $r = 0.541$. But solver structure does not load equally on the two sides. Cyclomatic complexity correlates only weakly with human difficulty, about $r = 0.150$, while correlating much more strongly with LLM difficulty, about $r = 0.591$. The paired difference survives correction at about $\Delta r = 0.441$, with $p = 0.0378$ and $q = 0.0472$.
 
-Residual analyses sharpen the same point. After removing shared human difficulty, residual LLM difficulty still tracks cyclomatic complexity at about $r = 0.603$. On the human side, the distinctive burden looks more duration- and search-like than structure-like. The human addenda reinforce that reading by showing that pair-level human difficulty tracks human duration much more strongly than raw board size and that within-task human heterogeneity is substantial.
+Residual analyses sharpen the same point. After removing shared human difficulty, residual LLM difficulty still tracks cyclomatic complexity at about $r = 0.603$. On the human side, the distinctive burden looks more duration- and search-like than structure-like. The human addenda reinforce that reading by showing that pair-level human difficulty tracks human duration much more strongly than raw board size and that within-task human heterogeneity is substantial. The audit table below is useful because it shows that the whole line is not hanging on one cherry-picked coefficient: the shared-alignment, difference, residual, and pair-level burden claims all survive as a coherent pattern.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \small
 \caption{Key solver-complexity results carried into the master paper.}
@@ -353,6 +493,30 @@ Residual LLM difficulty vs cyclomatic & $r = 0.603$, $q = 0.0194$ \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Selected claims from the solver-complexity audit table. This is the shortest table that still shows the repository-wide structure of the result rather than one isolated correlation.}
+\begin{tabular}{p{0.5in}p{3.1in}p{0.7in}p{0.7in}}
+\toprule
+\textbf{ID} & \textbf{Claim} & \textbf{Estimate} & \textbf{BH $q$} \\
+\midrule
+S1 & Human and LLM task difficulty are positively aligned on the approved ARC-2 overlap. & 0.531 & 0.0366 \\
+S2 & Human solve rate aligns with average-model pass rate on the same overlap. & 0.541 & 0.0280 \\
+D1 & Cyclomatic complexity is more strongly associated with LLM difficulty than with human difficulty. & 0.441 & 0.0472 \\
+D4 & Residual LLM difficulty still tracks solver structure after removing shared human difficulty. & 0.603 & 0.0194 \\
+H3 & Human duration is more strongly associated with human difficulty than raw board size is. & 0.487 & 0.0004 \\
+H5 & Task identity explains a large share of pair-level human difficulty variation on multi-pair tasks. & 0.749 & 0.0004 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{chart_pca_overview.png}
+    \caption{PCA overview of the validated solver-complexity panel. This figure matters because it shows that the complexity predictors are themselves organized into interpretable axes rather than arbitrary hand-picked metrics.}
+\end{figure}
 
 \begin{figure}[H]
     \centering
@@ -403,24 +567,51 @@ The third result is that the main structure asymmetry still appears when the ove
 
 The efficiency package then adds a different kind of evidence. On the 115 shared ARC-2 tasks, human solve rate versus LLM mean score is about 0.440 Pearson and 0.428 Spearman. Human solve rate versus TRM best task score is near zero. Within source families, LLM performance rises strongly with thinking rank and duration, while human performance rises strongly with latent ability and falls with mean duration. The best cross-validated model for human solve rate is a geometry-plus-LLM-performance model, but human duration remains poorly predicted. That is a concise way of saying that score alignment is clearer than effort alignment.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \small
-\caption{Selected cross-ARC and efficiency quantities used in the integrated interpretation.}
-\begin{tabular}{p{3.35in}p{1.5in}}
+\caption{Widened human-versus-LLM alignment across the cross-ARC slices. The latent column is the one the paper treats as primary, but the raw and PC1 columns show that the effect is not an artifact of one estimator.}
+\begin{tabular}{p{1.2in}p{0.8in}p{1.0in}p{1.0in}p{1.0in}}
 \toprule
-\textbf{Quantity} & \textbf{Value} \\
+\textbf{Slice} & \textbf{$n$ tasks} & \textbf{Raw solve vs LLM} & \textbf{Latent vs LLM} & \textbf{PC1 vs LLM} \\
 \midrule
-ARC-1 sidecar matched human/LLM tasks & 230 \\
-ARC-2 eval matched human/LLM tasks & 115 \\
-ARC-1 sidecar latent vs LLM difficulty & $r = 0.309$ \\
-ARC-2 eval latent vs LLM difficulty & $r = 0.355$ \\
-ARC-2 direct-overlap cyclomatic vs human difficulty & $r = 0.188$ \\
-ARC-2 direct-overlap cyclomatic vs LLM difficulty & $r = 0.600$ \\
-Shared-task human solve rate vs LLM mean score & Pearson $= 0.440$ \\
-Shared-task human solve rate vs TRM best score & Pearson $= 0.071$ \\
-LLM performance vs thinking rank & Spearman $= 0.805$ \\
-Human performance vs ability & Spearman $= 0.873$ \\
+ARC-1 sidecar & 230 & 0.297 & 0.309 & 0.362 \\
+ARC-2 eval & 115 & 0.368 & 0.355 & 0.341 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Direct-overlap structure deltas in the widened revisit. Even on the small revisit slice, the same asymmetry reappears: solver structure is more LLM-linked than human-linked.}
+\begin{tabular}{p{1.8in}p{0.6in}p{0.8in}p{0.8in}p{0.8in}}
+\toprule
+\textbf{Predictor} & \textbf{$n$} & \textbf{Human $r$} & \textbf{LLM $r$} & \textbf{$\Delta$} \\
+\midrule
+Cyclomatic complexity & 19 & 0.188 & 0.600 & 0.412 \\
+Structure PC1 & 19 & 0.173 & 0.552 & 0.378 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Selected efficiency correlations. The table is organized to show within-source gradients first and shared-task cross-source gradients second.}
+\begin{tabular}{p{2.6in}p{0.45in}p{0.7in}p{0.7in}}
+\toprule
+\textbf{Analysis} & \textbf{$n$} & \textbf{Pearson} & \textbf{Spearman} \\
+\midrule
+LLM performance vs thinking rank & 22 & 0.749 & 0.805 \\
+Human performance vs ability & 509 & 0.878 & 0.873 \\
+Human performance vs duration & 509 & -0.280 & -0.338 \\
+Shared-task human vs LLM score & 115 & 0.440 & 0.428 \\
+Shared-task human vs LLM duration & 115 & -0.284 & -0.332 \\
+Shared-task human vs LLM cost & 115 & -0.311 & -0.357 \\
+Shared-task human vs TRM score & 115 & 0.071 & 0.055 \\
+Public-eval human vs average model & 110 & 0.402 & 0.454 \\
+Public-eval human vs best single model & 110 & 0.276 & 0.276 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -435,6 +626,18 @@ Human performance vs ability & Spearman $= 0.873$ \\
     \centering
     \includegraphics[width=0.82\textwidth]{solver_structure_cyclomatic.png}
     \caption{Cross-ARC solver-structure revisit. Even on the widened revisit slice, cyclomatic complexity tracks LLM difficulty much more strongly than human difficulty.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.94\textwidth]{shared_task_latent_map.png}
+    \caption{Shared-task latent map from the efficiency package. This view is useful because it ties the cross-ARC linkage work back to the concrete 115-task overlap used for score and effort comparisons.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{task_correlation_heatmap.png}
+    \caption{Task-correlation heatmap across shared-task metrics. The main pattern is that score-like variables cluster together more clearly than effort-like variables do across source families.}
 \end{figure}
 
 \begin{figure}[H]
@@ -590,7 +793,150 @@ Non-LLM complexity sits cleanly between human and LLM complexity & Suggestive & 
 
 \subsection{What remains outside the current draft}
 
-Even after this merge, a few things remain more scaffolded than finished. The master paper still needs a figure pass that imports the highest-yield visuals from the local papers instead of only describing them. It also needs a tighter table strategy so that key quantities appear once in canonical form rather than being repeated descriptively across sections. Finally, the manuscript can still be lengthened substantially by expanding the section-level methods and by adding a formal limitations section that is separate from the discussion. The current version is therefore best understood as a genuine full-paper scaffold with substantial prose already in place, not as the last editorial pass.
+The current draft now carries the main figure and table spine from each empirical workstream, but it is still not the last editorial pass. The clearest remaining upgrades are to prune any redundant summary phrasing that survived the earlier scaffold stage, promote a small number of appendix-grade tables into canonical camera-ready forms, and decide which visuals are truly indispensable for a submission version versus this repository-scale synthesis version. A separate limitations section would also still help by gathering the benchmark-fragility issues that are currently distributed across methods and discussion. So this draft is no longer merely a scaffold, but it is still one revision short of a polished final manuscript.
+
+% ===== Selected Result Tables Appendix =====
+\section{Selected Result Tables Appendix}
+
+\subsection{Why include detailed result tables}
+
+The main text now carries the core figures and headline tables from each workstream, but a repo-scale paper also benefits from a second layer of detail that readers can inspect without reopening every local CSV. This appendix collects a few of the highest-yield exported tables in a compact format. The purpose is not to replace the narrative sections. It is to make the manuscript visibly closer to the underlying repository outputs.
+
+\subsection{Extended LLM leaderboard excerpt}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Extended leaderboard excerpt from the main LLM psychometric package. The appendix keeps a longer cut than the main text so the strength and steepness of the frontier ordering are visible in one place.}
+\begin{tabular}{p{2.45in}p{0.8in}p{0.8in}p{0.8in}}
+\toprule
+\textbf{Model} & \textbf{Type} & \textbf{ARC-1} & \textbf{ARC-2} \\
+\midrule
+Gemini 3 Deep Think Preview & Thinking & 96.0\% & 32.5\% \\
+Gemini 3 Pro Preview & Thinking & 85.5\% & 17.5\% \\
+GPT-5 Pro (2025-10-06) & Thinking & 77.2\% & 8.3\% \\
+GPT-5.1 Thinking High & Thinking & 72.3\% & 8.3\% \\
+Claude Sonnet 4.5 Thinking 32k & Thinking & 69.4\% & 7.5\% \\
+GPT-5.1 Thinking Medium & Thinking & 65.3\% & 5.0\% \\
+Claude Sonnet 4.5 Thinking 16k & Thinking & 59.7\% & 4.2\% \\
+Claude Haiku 4.5 Thinking 32k & Thinking & 59.4\% & 3.3\% \\
+Grok 4 Fast Reasoning & Thinking & 50.0\% & 3.3\% \\
+Claude Sonnet 4.5 Thinking 8k & Thinking & 49.2\% & 4.2\% \\
+Claude Haiku 4.5 Thinking 16k & Thinking & 44.4\% & 1.7\% \\
+GPT-5.1 Thinking Low & Thinking & 37.4\% & 0.8\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Non-LLM threshold-sensitivity ledger}
+
+{\scriptsize
+\begin{longtable}{p{0.5in}p{0.5in}p{2.25in}p{0.7in}p{0.7in}}
+\caption{Detailed threshold-sensitivity ledger for the selected ARC-2 overlap profiles. These rows are taken directly from the threshold-sensitivity export that underlies the condensed main-text table.} \\
+\toprule
+\textbf{Min attempts} & \textbf{$n$} & \textbf{System} & \textbf{Pair acc.} & \textbf{Human $r$} \\
+\midrule
+\endfirsthead
+\multicolumn{5}{l}{\small\itshape Non-LLM threshold-sensitivity ledger (continued)} \\
+\toprule
+\textbf{Min attempts} & \textbf{$n$} & \textbf{System} & \textbf{Pair acc.} & \textbf{Human $r$} \\
+\midrule
+\endhead
+2 & 161 & LLM average & 0.109 & 0.345 \\
+2 & 161 & GPT-5.2 xhigh & 0.491 & 0.256 \\
+2 & 161 & Claude Opus 16k & 0.174 & 0.348 \\
+2 & 161 & TRM 651522 pass@2 & 0.099 & 0.090 \\
+2 & 161 & TRM 361957 pass@2 & 0.050 & 0.164 \\
+2 & 161 & VARC ARC-2 ViT pass@2 & 0.043 & 0.091 \\
+3 & 159 & LLM average & 0.109 & 0.351 \\
+3 & 159 & GPT-5.2 xhigh & 0.484 & 0.242 \\
+3 & 159 & Claude Opus 16k & 0.176 & 0.362 \\
+3 & 159 & TRM 651522 pass@2 & 0.101 & 0.098 \\
+3 & 159 & TRM 361957 pass@2 & 0.050 & 0.171 \\
+3 & 159 & VARC ARC-2 ViT pass@2 & 0.044 & 0.096 \\
+5 & 129 & LLM average & 0.105 & 0.367 \\
+5 & 129 & GPT-5.2 xhigh & 0.481 & 0.231 \\
+5 & 129 & Claude Opus 16k & 0.163 & 0.403 \\
+5 & 129 & TRM 651522 pass@2 & 0.093 & 0.095 \\
+5 & 129 & TRM 361957 pass@2 & 0.039 & 0.199 \\
+5 & 129 & VARC ARC-2 ViT pass@2 & 0.039 & 0.142 \\
+8 & 110 & LLM average & 0.108 & 0.402 \\
+8 & 110 & GPT-5.2 xhigh & 0.491 & 0.276 \\
+8 & 110 & Claude Opus 16k & 0.164 & 0.439 \\
+8 & 110 & TRM 651522 pass@2 & 0.109 & 0.113 \\
+8 & 110 & TRM 361957 pass@2 & 0.045 & 0.214 \\
+8 & 110 & VARC ARC-2 ViT pass@2 & 0.036 & 0.158 \\
+\bottomrule
+\end{longtable}
+}
+
+\subsection{Solver-complexity audit excerpt}
+
+{\scriptsize
+\begin{longtable}{p{0.5in}p{1.15in}p{0.85in}p{0.85in}p{0.75in}}
+\caption{Selected rows from the solver-complexity hypothesis ledger. Claim IDs and families are preserved from the CSV so the appendix stays traceable to the audit exports.} \\
+\toprule
+\textbf{ID} & \textbf{Family} & \textbf{Estimate} & \textbf{BH $q$} & \textbf{FDR kept} \\
+\midrule
+\endfirsthead
+\multicolumn{5}{l}{\small\itshape Solver-complexity audit excerpt (continued)} \\
+\toprule
+\textbf{ID} & \textbf{Family} & \textbf{Estimate} & \textbf{BH $q$} & \textbf{FDR kept} \\
+\midrule
+\endhead
+S1 & shared\_alignment & 0.531 & 0.0366 & yes \\
+S2 & shared\_alignment & 0.541 & 0.0280 & yes \\
+S3 & llm\_internal\_consistency & 0.991 & 0.0004 & yes \\
+S4 & llm\_internal\_consistency & 0.970 & 0.0004 & yes \\
+D1 & difference\_claims & 0.441 & 0.0472 & yes \\
+D2 & difference\_claims & 0.374 & 0.0879 & no \\
+D4 & difference\_claims & 0.603 & 0.0194 & yes \\
+H1 & human\_pair\_level & 0.391 & 0.0004 & yes \\
+H3 & human\_pair\_level & 0.487 & 0.0004 & yes \\
+H4 & human\_pair\_level & -0.366 & 0.0006 & yes \\
+H5 & human\_pair\_level & 0.749 & 0.0004 & yes \\
+T1 & thinking\_advantage & -0.492 & 0.0004 & yes \\
+T2 & thinking\_advantage & -0.718 & 0.0001 & yes \\
+\bottomrule
+\end{longtable}
+}
+
+\subsection{Efficiency correlation ledger}
+
+{\scriptsize
+\begin{longtable}{p{2.8in}p{0.45in}p{0.7in}p{0.7in}}
+\caption{Selected correlations from the efficiency package. The table is intentionally more complete than the main-text version so the performance, duration, cost, and effort relations can be inspected directly.} \\
+\toprule
+\textbf{Analysis} & \textbf{$n$} & \textbf{Pearson} & \textbf{Spearman} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{l}{\small\itshape Efficiency correlation ledger (continued)} \\
+\toprule
+\textbf{Analysis} & \textbf{$n$} & \textbf{Pearson} & \textbf{Spearman} \\
+\midrule
+\endhead
+LLM performance vs thinking rank & 22 & 0.749 & 0.805 \\
+LLM duration vs thinking rank & 22 & 0.609 & 0.815 \\
+LLM performance vs duration & 29 & 0.387 & 0.672 \\
+LLM duration vs cost & 29 & 0.698 & 0.670 \\
+Human performance vs ability & 509 & 0.878 & 0.873 \\
+Human performance vs duration & 509 & -0.280 & -0.338 \\
+Human performance vs outfit & 509 & -0.458 & -0.691 \\
+Shared-task human solve vs LLM score & 115 & 0.440 & 0.428 \\
+Shared-task human solve vs LLM duration & 115 & -0.284 & -0.332 \\
+Shared-task human solve vs LLM cost & 115 & -0.311 & -0.357 \\
+Shared-task human solve vs TRM score & 115 & 0.071 & 0.055 \\
+Shared-task human duration vs LLM duration & 115 & 0.149 & 0.112 \\
+Shared-task submissions vs LLM attempts & 115 & -0.168 & -0.122 \\
+Shared-task LLM score vs duration & 115 & -0.465 & -0.425 \\
+Shared-task LLM duration vs cost & 115 & 0.938 & 0.942 \\
+Public-eval human vs average model & 110 & 0.402 & 0.454 \\
+Public-eval human vs best single model & 110 & 0.276 & 0.276 \\
+TRM performance vs step & 10 & 0.937 & 0.957 \\
+TRM performance vs oracle & 10 & 0.993 & 0.985 \\
+\bottomrule
+\end{longtable}
+}
 
 \bibliographystyle{plainnat}
 \bibliography{references}

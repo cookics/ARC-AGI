@@ -30,7 +30,7 @@ PREAMBLE = r"""
 \usepackage{xcolor}
 \usepackage[numbers,sort&compress]{natbib}
 \definecolor{darkslate}{HTML}{2C3E50}
-\graphicspath{{../../../analysis-llm-psychometrics/figures/}{../../../analysis-non-llm/papers/psychometric/figures/}{../../../analysis-latent-crossarc/figures/}{../../../analysis-efficiency/papers/efficiency/figures/}{../../../analysis-python-complexity/}}
+\graphicspath{{../../../analysis-llm-psychometrics/figures/}{../../../analysis-human/papers/human-testing/figures/}{../../../analysis-human/creme-analysis/figures/}{../../../analysis-non-llm/papers/psychometric/figures/}{../../../analysis-latent-crossarc/figures/}{../../../analysis-efficiency/papers/efficiency/figures/}{../../../analysis-python-complexity/}}
 \hypersetup{colorlinks=true,linkcolor=darkslate,citecolor=darkslate,urlcolor=darkslate}
 """
 

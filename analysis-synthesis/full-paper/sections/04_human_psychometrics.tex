@@ -18,32 +18,95 @@ The human line effectively ran three experiments. First, it tested whether the s
 
 \subsection{Results}
 
-The basic result is that the human benchmark is noisy but usable. The held-in diagnostics for the person-plus-item model are strong enough to support latent estimation, and the cross-ARC package later shows that latent task scores are more stable than raw task means. On the public-eval overlap, the human split-half median Pearson correlation is about 0.399. Human versus average-model correlation is about 0.402, which lands near the center of the human split-half distribution. Human versus best single model is lower, around 0.276, and human versus per-pair oracle sits in between, around 0.343.
+The basic result is that the human benchmark is noisy but usable. The held-in diagnostics for the person-plus-item model are strong enough to support latent estimation, and the cross-ARC package later shows that latent task scores are more stable than raw task means. The benchmark is sparse enough that the raw matrix itself matters: 4,681 attempts cover only 502 task-pair rows and about 40.4\% of public ARC-2 task pairs, so the paper cannot treat the human data like a complete exam matrix.
 
-This leads to a balanced reading. The strongest version of ``models are random with respect to humans'' is not supported, because the average-model profile clearly aligns with human item difficulty. But the strongest version of ``leaderboard success means human-like ordering'' is also not supported, because even a strong single model does not line up with humans as well as one split-half of humans lines up with the other.
+On the public-eval overlap, the human split-half median Pearson correlation is about 0.399. Human versus average-model correlation is about 0.402, which lands near the center of the human split-half distribution. Human versus best single model is lower, around 0.276, and human versus per-pair oracle sits in between, around 0.343. This leads to a balanced reading. The strongest version of ``models are random with respect to humans'' is not supported, because the average-model profile clearly aligns with human item difficulty. But the strongest version of ``leaderboard success means human-like ordering'' is also not supported, because even a strong single model does not line up with humans as well as one split-half of humans lines up with the other.
 
-The human side also has its own distinctive burden signature. Human difficulty is much more associated with duration than with raw board size, and within-task pair-level heterogeneity is substantial. These features become crucial later when the paper asks why solver complexity predicts LLM difficulty more strongly than human difficulty.
+The data composition tables and figures also clarify what kind of benchmark this is. Attempted items are not representative: on Public Eval, attempted items average about 425 input cells versus about 269 for unattempted items. Human burden is also distinctive. Human difficulty is much more associated with duration than with raw board size, and within-task pair-level heterogeneity is substantial. These features become crucial later when the paper asks why solver complexity predicts LLM difficulty more strongly than human difficulty.
 
-\begin{table}[t]
+\begin{table}[H]
 \centering
 \small
-\caption{Human-versus-model alignment in the public-eval overlap, benchmarked against human split-half reliability.}
-\begin{tabular}{p{2.6in}p{1.0in}p{1.2in}}
+\caption{Human benchmark snapshot from the unified attempt log. These values are the reason later sections lean on latent estimation and split-half benchmarking instead of treating raw human means as fully settled.}
+\begin{tabular}{p{3.2in}p{1.5in}}
 \toprule
-\textbf{Series} & \textbf{Pearson $r$} & \textbf{Percentile vs split-half} \\
+\textbf{Quantity} & \textbf{Value} \\
 \midrule
-Human split-half median & 0.399 & 0.500 \\
-Human vs average model & 0.402 & 0.523 \\
-Human vs best single model & 0.276 & 0.023 \\
-Human vs per-pair oracle & 0.343 & 0.179 \\
+Attempts & 4,681 \\
+Sessions & 509 \\
+Observed task IDs & 442 \\
+Observed task-pair rows & 502 \\
+Task-pair coverage of all observed ARC pairs & 40.4\% \\
+Implied session-by-item matrix density & 1.83\% \\
+Overall solve rate & 75.3\% \\
+Public Train solve rate & 80.4\% \\
+Public Eval solve rate & 61.3\% \\
+Median attempts per session & 8 \\
+Median attempts per item & 9 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Sampling-bias summary from the human-testing package. Attempted items are consistently larger than unattempted items, especially on Public Eval.}
+\begin{tabular}{p{1.0in}p{0.9in}p{0.55in}p{0.8in}p{0.8in}p{0.8in}}
+\toprule
+\textbf{Task set} & \textbf{Status} & \textbf{$n$} & \textbf{Mean input cells} & \textbf{Mean colors} & \textbf{Mean train pairs} \\
+\midrule
+Public Eval & Unattempted & 5 & 269.2 & 6.30 & 3.60 \\
+Public Eval & Attempted & 115 & 424.8 & 5.45 & 2.97 \\
+Public Train & Unattempted & 674 & 145.9 & 3.75 & 3.23 \\
+Public Train & Attempted & 326 & 293.1 & 4.36 & 3.24 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Human-versus-model alignment in the public-eval overlap, benchmarked against human split-half reliability. Including the overlap-set Jaccard terms makes it clear that Pearson alone is not the only sense in which the average-model profile behaves human-like.}
+\begin{tabular}{p{1.95in}p{0.7in}p{0.7in}p{0.7in}p{0.7in}p{0.9in}}
+\toprule
+\textbf{Series} & \textbf{Pearson $r$} & \textbf{Spearman $\rho$} & \textbf{Hard Jacc.} & \textbf{Easy Jacc.} & \textbf{Percentile vs split-half} \\
+\midrule
+Human split-half median & 0.399 & 0.427 & 0.135 & 0.235 & 0.500 \\
+Human vs average model & 0.402 & 0.454 & 0.100 & 0.419 & 0.523 \\
+Human vs best single model & 0.276 & 0.276 & 0.000 & 0.257 & 0.023 \\
+Human vs per-pair oracle & 0.343 & 0.346 & 0.100 & 0.375 & 0.179 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{figure}[H]
     \centering
+    \includegraphics[width=\textwidth]{fig01_human_response_matrix.png}
+    \caption{Observed human response matrix from the human-testing package. The missingness pattern is part of the result: this is a sparse, opportunistic human benchmark rather than a cleanly administered test.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig05_sampling_bias.png}
+    \caption{Sampling-bias visualization from the human package. The paper needs this view because later cross-system claims are otherwise easy to over-read as if humans saw a representative subset.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig01_split_half_vs_models.png}
+    \caption{Split-half context against human-versus-model correlations. This is the most direct visual reason the paper treats the average-model alignment result as real but incomplete.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
     \includegraphics[width=0.92\textwidth]{human_split_half_stability.png}
     \caption{Raw solve rates versus latent task estimates under split-half resampling in the cross-ARC package. The main point is that latent task estimates are more stable than naive raw means in every benchmark slice.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig07_human_vs_lm_public_eval.png}
+    \caption{Public-eval human-versus-model comparison view from the human-testing package. The figure complements the table by showing where the average-model profile does and does not overlap the human ordering.}
 \end{figure}
 
 \subsection{Why this section matters for the rest of the paper}

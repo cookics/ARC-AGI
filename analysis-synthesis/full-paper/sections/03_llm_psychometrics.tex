@@ -22,11 +22,33 @@ First, it asked whether ARC produces a clean ordered response matrix across fron
 
 \subsection{Results}
 
-The first result is that ARC looks unusually orderly on the LLM side. The leaderboard is highly stratified, the response matrix has a strong staircase structure, and Loevinger's scalability coefficient reaches $H = 0.779$. The second result is that one large factor dominates the response structure: PC1 explains 48.7\% of variance while PC2 explains 8.8\%. The third result is that thinking-style models mostly move along the same latent dimension rather than opening a clearly orthogonal regime. The fourth result is that the broader benchmark addendum points in the same direction: the first principal component explains 66.4\% of variance across the 203-model, 13-benchmark matrix, and held-out benchmark prediction achieves mean $R^2 = 0.615$.
+The first result is that ARC looks unusually orderly on the LLM side. The leaderboard is highly stratified, the response matrix has a strong staircase structure, and Loevinger's scalability coefficient reaches $H = 0.779$. The top of the leaderboard is not a collection of near-ties: the best ARC-AGI-1 model reaches 96.0\% while the best ARC-AGI-2 score in the same package is still only 32.5\%, which makes the difficulty jump visible even before any latent analysis.
+
+The second result is that one large factor dominates the response structure: PC1 explains 48.7\% of variance while PC2 explains 8.8\%. The third result is that thinking-style models mostly move along the same latent dimension rather than opening a clearly orthogonal regime. The fourth result is that the broader benchmark addendum points in the same direction: the first principal component explains 66.4\% of variance across the 203-model, 13-benchmark matrix, and held-out benchmark prediction achieves mean $R^2 = 0.615$.
 
 Taken together, these findings make ARC psychometrically usable on the model side. They do not prove perfect unidimensionality, but they do show that the benchmark is structured enough for later human-alignment and solver-complexity comparisons to mean something.
 
-\begin{table}[t]
+\begin{table}[H]
+\centering
+\scriptsize
+\caption{Leaderboard excerpt from the main LLM matrix. The important point for the unified paper is not only who leads, but how sharply the ARC-AGI-2 ceiling remains below ARC-AGI-1 even for the strongest models.}
+\begin{tabular}{p{2.55in}p{0.8in}p{0.8in}p{0.8in}}
+\toprule
+\textbf{Model} & \textbf{Type} & \textbf{ARC-1} & \textbf{ARC-2} \\
+\midrule
+Gemini 3 Deep Think Preview & Thinking & 96.0\% & 32.5\% \\
+Gemini 3 Pro Preview & Thinking & 85.5\% & 17.5\% \\
+GPT-5 Pro (2025-10-06) & Thinking & 77.2\% & 8.3\% \\
+GPT-5.1 Thinking High & Thinking & 72.3\% & 8.3\% \\
+Claude Sonnet 4.5 Thinking 32k & Thinking & 69.4\% & 7.5\% \\
+GPT-5.1 Thinking Medium & Thinking & 65.3\% & 5.0\% \\
+Claude Sonnet 4.5 Thinking 16k & Thinking & 59.7\% & 4.2\% \\
+Claude Haiku 4.5 Thinking 32k & Thinking & 59.4\% & 3.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
 \centering
 \small
 \caption{Compact summary of the main LLM psychometric findings used in the master paper.}
@@ -61,6 +83,18 @@ Held-out benchmark prediction mean $R^2$ & 0.615 \\
     \centering
     \includegraphics[width=0.9\textwidth]{fig3_scree_plot.png}
     \caption{Scree plot for the main ARC-AGI-1 model-by-task matrix. The large PC1-to-PC2 gap is the core reason the repository treats ARC as strongly one-factor dominated on the LLM side.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{fig4_cognitive_map.png}
+    \caption{Low-dimensional cognitive map of the frontier model matrix. The key visual pattern is that stronger thinking variants extend the same main axis more than they open a qualitatively separate cluster.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.88\textwidth]{fig5_ability.png}
+    \caption{Estimated model ability under the main latent-difficulty fit. This is one of the views that makes the machine-side ARC scale usable for later comparison rather than just leaderboard reporting.}
 \end{figure}
 
 \subsection{Why this section matters for the rest of the paper}
