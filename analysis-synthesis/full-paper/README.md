@@ -32,6 +32,6 @@ The goal here is to support a genuinely large manuscript that can eventually rea
 
 ## Important Framing
 
-This workspace is intentionally broader than the earlier short paper in `analysis-synthesis/paper/`.
+This workspace is intentionally broader than the earlier short paper in `analysis-synthesis/synthesis-note/`.
 That earlier paper is now best treated as a compact synthesis note.
 This `full-paper/` workspace is the real master-manuscript pipeline.

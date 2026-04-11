@@ -5,7 +5,7 @@ This folder holds repo-wide synthesis drafts that pull together the human, LLM, 
 Current entry point:
 
 - `drafts/arc_cross_reference_draft_v1.md`
-- `paper/paper.tex`
-- `paper/paper.pdf` once compiled
+- `synthesis-note/paper.tex`
+- `synthesis-note/paper.pdf` once compiled
 
 The goal is to keep the cross-paper story in one place without forcing it into any single analysis subfolder.
